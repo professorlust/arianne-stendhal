@@ -54,7 +54,7 @@
 	</condition>
 	<condition property="exclude.jardiff" value="true">
 		<not>
-			<available file="${build-archive}/stendhal-${version.old}.zip"/>
+			<available file="${build-archive}/stendhal-noblood-${version.old}.zip"/>
 		</not>
 	</condition>
 
@@ -644,7 +644,7 @@
 		<touch file="${buildroot}/stendhal-${version}/log/stendhal.txt" />
 		<copy todir="${buildroot}/stendhal-${version}" file="README.md"/>
 		<copy todir="${buildroot}/stendhal-${version}" file="icon.ico"/>
-		<zip destfile="${buildroot}/stendhal-${version}.zip">
+		<zip destfile="${buildroot}/stendhal-noblood-${version}.zip">
 			<zipfileset dir="${buildroot}/stendhal-${version}" excludes="stendhal-starter.jar"/>
 			<zipfileset dir="${buildroot}/stendhal-${version}" includes="stendhal-starter.jar" filemode="755"/>
 		</zip>
@@ -845,7 +845,7 @@
 				<exclude name="*.zip"/>
 			</fileset>
 		</delete>
-		<unzip src="${build-archive}/stendhal-${version.old}.zip" dest="${build-archive}" />
+		<unzip src="${build-archive}/stendhal-noblood-${version.old}.zip" dest="${build-archive}" />
 		<java jar="libs/jardiff.jar" fork="true">
 			<arg value="-nonminimal" />
 			<arg value="-creatediff" />
