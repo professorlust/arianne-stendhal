@@ -120,7 +120,7 @@ class VisualSettings {
 		page.add(weather);
 
 		// blood
-		JCheckBox showBloodToggle = SettingsComponentFactory.createSettingsToggle(GAMESCREEN_BLOOD, "true",
+		JCheckBox showBloodToggle = SettingsComponentFactory.createSettingsToggle(GAMESCREEN_BLOOD, "false",
 				"Show blood and corpses", "Show blood spots on hits during fighting, and corpses.");
 		page.add(showBloodToggle);
 

@@ -104,7 +104,7 @@ class Corpse2DView<T extends Corpse> extends Entity2DView<T> {
 		final String harmlessImageName = entity.getRPObject().get("harmless_image");
 		Sprite sprite = null;
 		ZoneInfo info = ZoneInfo.get();
-		boolean showBlood = Boolean.parseBoolean(WtWindowManager.getInstance().getProperty("gamescreen.blood", "true"));
+		boolean showBlood = Boolean.parseBoolean(WtWindowManager.getInstance().getProperty("gamescreen.blood", "false"));
 		if (showBlood) {
 			sprite = SpriteStore.get().getModifiedSprite(translate("corpse/"  + imageName),
 					info.getZoneColor(), info.getColorMethod());
