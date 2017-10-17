@@ -618,7 +618,8 @@
 		<delete dir="${buildroot}/stendhal-server-${version}"/>
 	</target>
 
-	<target name="dist_client_binary" depends="client_build">
+
+	<target name="dist_client" depends="client_build">
 		<mkdir dir="${buildroot}/stendhal-${version}"/>
 		<mkdir dir="${buildroot}/stendhal-${version}/lib"/>
 		<mkdir dir="${buildroot}/stendhal-${version}/log"/>
@@ -644,6 +645,10 @@
 		<touch file="${buildroot}/stendhal-${version}/log/stendhal.txt" />
 		<copy todir="${buildroot}/stendhal-${version}" file="README.md"/>
 		<copy todir="${buildroot}/stendhal-${version}" file="icon.ico"/>
+	</target>
+
+
+	<target name="dist_client_binary" depends="dist_client">
 		<zip destfile="${buildroot}/stendhal-${version}.zip">
 			<zipfileset dir="${buildroot}/stendhal-${version}" excludes="stendhal-starter.jar"/>
 			<zipfileset dir="${buildroot}/stendhal-${version}" includes="stendhal-starter.jar" filemode="755"/>
