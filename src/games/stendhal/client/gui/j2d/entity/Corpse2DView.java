@@ -101,7 +101,7 @@ class Corpse2DView<T extends Corpse> extends Entity2DView<T> {
 	@Override
 	protected void buildRepresentation(T entity) {
 		ZoneInfo info = ZoneInfo.get();
-		boolean showBlood = WtWindowManager.getInstance().getPropertyBoolean("gamescreen.blood", true);
+		boolean showBlood = WtWindowManager.getInstance().getPropertyBoolean("gamescreen.blood", false);
 		String imageName;
 		if (showBlood) {
 			imageName = entity.getRPObject().get("image");
@@ -342,7 +342,7 @@ class Corpse2DView<T extends Corpse> extends Entity2DView<T> {
 			autoOpenedAlready = true;
 			boolean autoRaiseCorpse = WtWindowManager.getInstance().getPropertyBoolean("gamescreen.autoinspectcorpses", true);
 			if (autoRaiseCorpse
-					&& (entity.getCorpseOwner() != null) 
+					&& (entity.getCorpseOwner() != null)
 					&& entity.getCorpseOwner().equals(User.getCharacterName())
 					&& !entity.isEmpty()) {
 				/*
