@@ -620,41 +620,41 @@
 
 
 	<target name="dist_client" depends="client_build">
-		<mkdir dir="${buildroot}/${distname-noblood}"/>
-		<mkdir dir="${buildroot}/${distname-noblood}/lib"/>
-		<mkdir dir="${buildroot}/${distname-noblood}/log"/>
+		<mkdir dir="${distroot-client}"/>
+		<mkdir dir="${distroot-client}/lib"/>
+		<mkdir dir="${distroot-client}/log"/>
 
-		<copy tofile="${buildroot}/${distname-noblood}/stendhal-starter.jar" file="${lib}/${client_starter_jarname}"/>
-		<chmod file="${buildroot}/${distname-noblood}/stendhal-starter.jar" perm="755"/>
-		<copy tofile="${buildroot}/${distname-noblood}/lib/stendhal.jar" file="${lib}/${client_jarname}"/>
-		<copy tofile="${buildroot}/${distname-noblood}/lib/log4j.jar" file="${log4j_jar}"/>
-		<copy tofile="${buildroot}/${distname-noblood}/lib/marauroa.jar" file="${marauroa_jar}"/>
-		<copy tofile="${buildroot}/${distname-noblood}/lib/jorbis.jar" file="${jorbis_jar}"/>
-		<copy tofile="${buildroot}/${distname-noblood}/lib/stendhal-sound-data.jar" file="${lib}/${client_sound_data}"/>
-		<copy tofile="${buildroot}/${distname-noblood}/lib/stendhal-music-data.jar" file="${lib}/${client_music_data}"/>
-		<copy tofile="${buildroot}/${distname-noblood}/lib/stendhal-data.jar" file="${lib}/${client_data}"/>
-		<copy todir="${buildroot}/${distname-noblood}/lib">
+		<copy tofile="${distroot-client}/stendhal-starter.jar" file="${lib}/${client_starter_jarname}"/>
+		<chmod file="${distroot-client}/stendhal-starter.jar" perm="755"/>
+		<copy tofile="${distroot-client}/lib/stendhal.jar" file="${lib}/${client_jarname}"/>
+		<copy tofile="${distroot-client}/lib/log4j.jar" file="${log4j_jar}"/>
+		<copy tofile="${distroot-client}/lib/marauroa.jar" file="${marauroa_jar}"/>
+		<copy tofile="${distroot-client}/lib/jorbis.jar" file="${jorbis_jar}"/>
+		<copy tofile="${distroot-client}/lib/stendhal-sound-data.jar" file="${lib}/${client_sound_data}"/>
+		<copy tofile="${distroot-client}/lib/stendhal-music-data.jar" file="${lib}/${client_music_data}"/>
+		<copy tofile="${distroot-client}/lib/stendhal-data.jar" file="${lib}/${client_data}"/>
+		<copy todir="${distroot-client}/lib">
 			<fileset dir="libs">
 				<include name="*.txt"/>
 				<include name="*.html"/>
 			</fileset>
 		</copy>
-		<copy todir="${buildroot}/${distname-noblood}/doc">
+		<copy todir="${distroot-client}/doc">
 			<fileset dir="doc"/>
 			<fileset dir="." includes="LICENSE.txt"/>
 		</copy>
-		<touch file="${buildroot}/${distname-noblood}/log/stendhal.txt" />
-		<copy todir="${buildroot}/${distname-noblood}" file="README.md"/>
-		<copy todir="${buildroot}/${distname-noblood}" file="icon.ico"/>
+		<touch file="${distroot-client}/log/stendhal.txt" />
+		<copy todir="${distroot-client}" file="README.md"/>
+		<copy todir="${distroot-client}" file="icon.ico"/>
 	</target>
 
 
 	<target name="dist_client_binary" depends="dist_client">
-		<zip destfile="${buildroot}/${distname-noblood}.zip">
-			<zipfileset dir="${buildroot}/${distname-noblood}" excludes="stendhal-starter.jar"/>
-			<zipfileset dir="${buildroot}/${distname-noblood}" includes="stendhal-starter.jar" filemode="755"/>
+		<zip destfile="${distroot-client}.zip">
+			<zipfileset dir="${distroot-client}" excludes="stendhal-starter.jar"/>
+			<zipfileset dir="${distroot-client}" includes="stendhal-starter.jar" filemode="755"/>
 		</zip>
-		<delete dir="${buildroot}/${distname-noblood}"/>
+		<delete dir="${distroot-client}"/>
 	</target>
 
 
