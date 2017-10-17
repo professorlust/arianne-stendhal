@@ -74,8 +74,6 @@ class VisualSettings {
 	/** Property used for the decorative font. */
 	private static final String FONT_SIZE_PROPERTY = "ui.font_size";
 
-	private static final String GAMESCREEN_BLOOD = "gamescreen.blood";
-
 	private static final String SCALE_SCREEN_PROPERTY = "ui.scale_screen";
 	/** Property used for toggling map coloring on. */
 	private static final String MAP_COLOR_PROPERTY = "ui.colormaps";
@@ -118,21 +116,6 @@ class VisualSettings {
 		JCheckBox weather = SettingsComponentFactory.createSettingsToggle("ui.draw_weather", true,
 				"Draw weather", "Draw weather effects.");
 		page.add(weather);
-
-		// blood
-		JCheckBox showBloodToggle = SettingsComponentFactory.createSettingsToggle(GAMESCREEN_BLOOD, false,
-				"Show blood and corpses", "Show blood spots on hits during fighting, and corpses.");
-		page.add(showBloodToggle);
-		// Inform players that some images won't update until after client is restarted.
-		// FIXME: Can't images be updated via map change?
-		showBloodToggle.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				final String msg = "Some changes will not take effect until the client is restarted.";
-				ClientSingletonRepository.getUserInterface().addEventLine(new EventLine("", msg, NotificationType.CLIENT));
-			}
-
-		});
 
 		// show creature speech bubbles
 		JCheckBox showCreatureSpeechToggle = SettingsComponentFactory.createSettingsToggle(GAMESCREEN_CREATURESPEECH, true,
