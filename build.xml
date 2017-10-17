@@ -619,6 +619,7 @@
 		<mkdir dir="${buildroot}/stendhal-${version}/log"/>
 
 		<copy tofile="${buildroot}/stendhal-${version}/stendhal-starter.jar" file="${lib}/${client_starter_jarname}"/>
+		<chmod file="${buildroot}/stendhal-${version}/stendhal-starter.jar" perm="755"/>
 		<copy tofile="${buildroot}/stendhal-${version}/lib/stendhal.jar" file="${lib}/${client_jarname}"/>
 		<copy tofile="${buildroot}/stendhal-${version}/lib/log4j.jar" file="${log4j_jar}"/>
 		<copy tofile="${buildroot}/stendhal-${version}/lib/marauroa.jar" file="${marauroa_jar}"/>
