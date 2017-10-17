@@ -57,7 +57,7 @@
 	</condition>
 	<condition property="exclude.jardiff" value="true">
 		<not>
-			<available file="${build-archive}/stendhal-${version.old}.zip"/>
+			<available file="${build-archive}/stendhal-noblood-${version.old}.zip"/>
 		</not>
 	</condition>
 
@@ -685,7 +685,7 @@
 
 	<target name="dist_client_binary" depends="client_build">
 		<local name="stage"/>
-		<property name="stage" value="${buildroot}/stendhal-${version}"/>
+		<property name="stage" value="${buildroot}/stendhal-noblood-${version}"/>
 
 		<antcall target="stage_dist_client">
 			<param name="stage" value="${stage}"/>
@@ -701,7 +701,7 @@
 
 	<target name="dist_client_exe" depends="launch4j">
 		<local name="stage"/>
-		<property name="stage" value="${buildroot}/stendhal-${version}-win32"/>
+		<property name="stage" value="${buildroot}/stendhal-noblood-${version}-win32"/>
 
 		<antcall target="stage_dist_client_exe">
 			<param name="stage" value="${stage}"/>
@@ -909,7 +909,7 @@
 				<exclude name="*.zip"/>
 			</fileset>
 		</delete>
-		<unzip src="${build-archive}/stendhal-${version.old}.zip" dest="${build-archive}" />
+		<unzip src="${build-archive}/stendhal-noblood-${version.old}.zip" dest="${build-archive}" />
 		<java jar="libs/jardiff.jar" fork="true">
 			<arg value="-nonminimal" />
 			<arg value="-creatediff" />
