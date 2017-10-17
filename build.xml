@@ -698,7 +698,7 @@
 
 	<target name="dist_client_binary" depends="client_build">
 		<local name="stage"/>
-		<property name="stage" value="${buildroot}/${distname.noblood}"/>
+		<property name="stage" value="${distroot.client}"/>
 
 		<antcall target="stage_dist_client">
 			<param name="stage" value="${stage}"/>
@@ -714,7 +714,7 @@
 
 	<target name="dist_client_exe" depends="launch4j">
 		<local name="stage"/>
-		<property name="stage" value="${buildroot}/${distname.noblood}-win32"/>
+		<property name="stage" value="${distroot.client}-win32"/>
 
 		<antcall target="stage_dist_client_exe">
 			<param name="stage" value="${stage}"/>
