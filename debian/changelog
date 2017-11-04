@@ -1,0 +1,22 @@
+stendhal-noblood (1.26-1) xenial; urgency=low
+
+  * removed blood setting
+  * world
+    made new image for Gashadokuro
+    made new image for Stone Golem
+    made new image for Chicken
+    made new image for mithrilforgernpc
+    limited time in Hell due to the heat
+    improved dialogues of some NPCs near Ados
+  * experimental webclient
+    removed outdated text and admin clients
+    added popup windows
+    added group management commands
+    implemented stacked item management
+    display zone name
+    implemented gate, walk blocker and PassiveNPC
+  * bugfixes
+    fixed a double login bug resulting in item duplication (thanks to pepsz for the report)
+    fixed a NullPointerException on quit dialog
+
+ -- Jordan Irwin <antumdeluge@gmail.com>  Fri, 03 Nov 2017 18:29:44 -0700

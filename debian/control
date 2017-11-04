@@ -1,0 +1,26 @@
+Source: stendhal-noblood
+Section: games
+Priority: optional
+Maintainer: Jordan Irwin <antumdeluge@gmail.com>
+Build-Depends: debhelper (>=9), javahelper (>=0.25), default-jdk | openjdk-8-jdk | openjdk-9-jdk | openjdk-7-jdk, ant
+Standards-Version: 3.9.7
+Homepage: https://stendhalgame.org/
+
+Package: stendhal-noblood
+Architecture: any
+Depends: ${misc:Depends}, default-jre | openjdk-8-jre | openjdk-9-jre | openjdk-7-jre
+Description: 2-dimensional fantasy multiplayer online role-playing game
+ Stendhal is a fun, friendly, & free multiplayer online adventure game
+ with an old school feel.
+ .
+ It has a huge & rich world. You can explore cities, forests, mountains,
+ plains, & dungeons. Fight monsters & become a hero.
+ .
+ You will meet a wide variety of characters. Many will give you tasks &
+ quests for valuable experience. You may be asked to help protect land,
+ feed the hungry, heal the sick, make someone happy, solve a puzzle, or
+ simply lend a hand.
+ .
+ This modified version of the game client disallows enabling the blood
+ setting.
+ 
