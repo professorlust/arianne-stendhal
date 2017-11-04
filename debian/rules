@@ -1,0 +1,51 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+JAVA_HOME=/usr/lib/jvm/default-java
+
+PKG_NAME=stendhal-noblood
+PKG_TITLE="Stendhal \(no blood\)"
+PKG_VER=1.26
+
+INSTALLDIR=$(CURDIR)/debian/$(PKG_NAME)
+BINDIR=$(INSTALLDIR)/usr/games
+DATADIR=$(INSTALLDIR)/usr/share
+APPDIR=$(DATADIR)/applications
+
+LAUNCHER=[Desktop Entry]\nVersion=1.0\nEncoding=UTF-8\nName=$(PKG_TITLE)\nComment=\nType=Application\nExec=$(PKG_NAME)\nIcon=$(PKG_NAME)\nTerminal=false\nStartupNotify=true\nCategories=Game;Java;
+
+%:
+	dh $@ --with javahelper
+
+
+# dh_make generated override targets
+# This is example for Cmake (See https://bugs.debian.org/641051 )
+#override_dh_auto_configure:
+#	dh_auto_configure -- #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
+
+override_dh_auto_build:
+	ant dist_client
+
+override_dh_auto_install:
+	mkdir -p "$(DATADIR)"
+	cp -R "$(CURDIR)/build/$(PKG_NAME)-$(PKG_VER)" "$(DATADIR)/$(PKG_NAME)"
+	mkdir -p "$(BINDIR)"
+	echo -e "#!/bin/bash\n\njava -jar /usr/share/$(PKG_NAME)/stendhal-starter.jar" > "$(BINDIR)/$(PKG_NAME)"
+	chmod +x "$(BINDIR)/$(PKG_NAME)"
+	mkdir -p "$(DATADIR)/pixmaps"
+	cp "$(CURDIR)/debian/icon.png" "$(DATADIR)/pixmaps/$(PKG_NAME).png"
+	mkdir -p "$(APPDIR)"
+	echo "$(LAUNCHER)" > "$(APPDIR)/$(PKG_NAME).desktop"
+	chmod +x "$(APPDIR)/$(PKG_NAME).desktop"
