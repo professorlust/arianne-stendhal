@@ -1,5 +1,12 @@
 stendhal-noblood (1.26-1) xenial; urgency=low
 
+  * First Debian release
+
+ -- Jordan Irwin <antumdeluge@gmail.com>  Mon, 06 Nov 2017 11:27:00 -0700
+
+
+stendhal-noblood (1.26) xenial; urgency=low
+
   * removed blood setting
   * world
     - made new image for Gashadokuro
