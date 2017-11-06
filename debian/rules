@@ -42,7 +42,7 @@ override_dh_auto_install:
 	mkdir -p "$(DATADIR)"
 	cp -R "$(CURDIR)/build/$(PKG_NAME)-$(PKG_VER)" "$(DATADIR)/$(PKG_NAME)"
 	mkdir -p "$(BINDIR)"
-	echo -e "#!/bin/bash\n\njava -jar /usr/share/$(PKG_NAME)/stendhal-starter.jar" > "$(BINDIR)/$(PKG_NAME)"
+	echo "#!/bin/bash\n\njava -jar /usr/share/$(PKG_NAME)/stendhal-starter.jar" > "$(BINDIR)/$(PKG_NAME)"
 	chmod +x "$(BINDIR)/$(PKG_NAME)"
 	mkdir -p "$(DATADIR)/pixmaps"
 	cp "$(CURDIR)/debian/icon.png" "$(DATADIR)/pixmaps/$(PKG_NAME).png"
