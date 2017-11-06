@@ -46,3 +46,11 @@ build_server_xmlconf
 *.umlproject
 /*.cert
 /*.csr
+
+# Debian build files
+debian/*debhelper*
+debian/files
+debian/*.substvars
+
+# Debian build stage directory
+debian/stendhal*/
