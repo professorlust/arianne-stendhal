@@ -9,7 +9,8 @@ stendhal-noblood (1.27) xenial; urgency=low
   * client
     - players can change skin color
     - sprite "dead_ent" renamed to "old_ent" to match enemy name
+    - blood tiles replaced with images suffixed with "-noblood"
   * controls
     - auto-walk
 
- -- Jordan Irwin <antumdeluge@gmail.com>  Tue, 05 Jun 2018 18:37:00 -0700
+ -- Jordan Irwin <antumdeluge@gmail.com>  Tue, 05 Jun 2018 22:02:00 -0700
