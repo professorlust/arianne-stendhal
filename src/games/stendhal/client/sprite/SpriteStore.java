@@ -21,7 +21,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -342,8 +341,8 @@ public class SpriteStore {
 
 		// No blood mode
 		String safeRef = ref.split(".png")[0] + "-noblood.png";
-		File safeFile = new File(safeRef);
-		if (safeFile.isFile()) {
+		URL safeURL = DataLoader.getResource(safeRef);
+		if (safeURL != null) {
 			logger.debug("Using safe image: " + safeRef);
 			ref = safeRef;
 		}
