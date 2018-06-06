@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 import games.stendhal.client.IGameScreen;
 import games.stendhal.client.gui.TransparencyMode;
 import games.stendhal.client.gui.j2d.Blend;
-import games.stendhal.client.gui.wt.core.WtWindowManager;
 import games.stendhal.client.sprite.TileSprite.TSRef;
 
 /**
@@ -342,10 +341,9 @@ public class SpriteStore {
 		BufferedImage sourceImage = null;
 
 		// No blood mode
-		boolean showBlood = Boolean.parseBoolean(WtWindowManager.getInstance().getProperty("gamescreen.blood", "true"));
 		String safeRef = ref.split(".png")[0] + "-noblood.png";
 		File safeFile = new File(safeRef);
-		if (!showBlood && safeFile.isFile()) {
+		if (safeFile.isFile()) {
 			logger.debug("Using safe image: " + safeRef);
 			System.out.println("Using safe image: " + safeRef);
 			ref = safeRef;
