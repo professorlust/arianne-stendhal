@@ -345,7 +345,6 @@ public class SpriteStore {
 		File safeFile = new File(safeRef);
 		if (safeFile.isFile()) {
 			logger.debug("Using safe image: " + safeRef);
-			System.out.println("Using safe image: " + safeRef);
 			ref = safeRef;
 		}
 
