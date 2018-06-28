@@ -117,7 +117,7 @@ public class AntivenomRing extends AbstractQuest {
 	// NPCs involved in quest
 	private final SpeakerNPC mixer = npcs.get("Jameson");
 	// FIXME: find NPCs for these roles
-	private final SpeakerNPC extractor = npcs.get("");
+	private final SpeakerNPC extractor = npcs.get("Zoey");
 	private final SpeakerNPC fuser = npcs.get("Hogart");
 
 	@Override
