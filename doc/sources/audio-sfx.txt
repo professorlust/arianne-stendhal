@@ -239,5 +239,6 @@ wings-flap-large-1.*     dave.des/; CC0; http://freesound.org/people/dave.des/so
 witch-cackle-1.ogg       Jordan Irwin (AntumDeluge); CC0; https://opengameart.org/node/81248
 woodpecker-1.*           ???; ???; free sound pack
 xylophone-1.*            Storyteller; GPL
+yawn-female-1.ogg        LittleRainySeasons; CC BY 3.0; https://freesound.org/people/LittleRainySeasons/sounds/334053/
 yay-1.ogg                Katie Russell (kymara); GPL
 yell-1.ogg               ???; ???; free sound pack
