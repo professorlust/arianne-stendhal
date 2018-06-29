@@ -39,7 +39,28 @@ public class RequestAntivenom extends AVRQuestStep {
 
 	@Override
 	protected void addDialogue(final String QUEST_SLOT) {
-		// If player has note to apothecary then quest is offered
+		addRequestQuestDialogue(QUEST_SLOT);
+		addQuestActiveDialogue(QUEST_SLOT);
+		addQuestDoneDialogue(QUEST_SLOT);
+	}
+
+
+	/**
+	 * Conversation states for NPC before quest is active.
+	 *
+	 * @param QUEST_SLOT
+	 */
+	private void addRequestQuestDialogue(final String QUEST_SLOT) {
+		// Player asks for quest without having Klass's note
+		npc.add(ConversationStates.ATTENDING,
+				ConversationPhrases.QUEST_MESSAGES,
+				new AndCondition(new NotCondition(new PlayerHasItemWithHimCondition("note to apothecary")),
+						new QuestNotStartedCondition(QUEST_SLOT)),
+				ConversationStates.ATTENDING,
+				"I'm sorry, but I'm much too busy right now. Perhaps you could talk to #Klaas.",
+				null);
+
+		// Player speaks to apothecary while carrying note.
 		npc.add(ConversationStates.IDLE,
 				ConversationPhrases.GREETING_MESSAGES,
 				new AndCondition(new GreetingMatchesNameCondition(npc.getName()),
@@ -49,7 +70,7 @@ public class RequestAntivenom extends AVRQuestStep {
 				"Oh, a message from Klaas. Is that for me?",
 				null);
 
-		// In case player dropped note before speaking to Jameson
+		// Player explicitly requests "quest" while carrying note (in case note is dropped before speaking to apothecary).
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
 				new AndCondition(new GreetingMatchesNameCondition(npc.getName()),
@@ -88,16 +109,15 @@ public class RequestAntivenom extends AVRQuestStep {
 				ConversationStates.IDLE,
 				"Oh, well, carry on then.",
 				new SetQuestAndModifyKarmaAction(QUEST_SLOT, "rejected", -5.0));
+	}
 
-		// Player asks for quest without having Klass's note
-		npc.add(ConversationStates.ATTENDING,
-				ConversationPhrases.QUEST_MESSAGES,
-				new AndCondition(new NotCondition(new PlayerHasItemWithHimCondition("note to apothecary")),
-						new QuestNotStartedCondition(QUEST_SLOT)),
-				ConversationStates.ATTENDING,
-				"I'm sorry, but I'm much too busy right now. Perhaps you could talk to #Klaas.",
-				null);
 
+	/**
+	 * Conversation states for NPC while quest is active.
+	 *
+	 * @param QUEST_SLOT
+	 */
+	private void addQuestActiveDialogue(final String QUEST_SLOT) {
 		// Player asks for quest after it is started
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
@@ -107,6 +127,134 @@ public class RequestAntivenom extends AVRQuestStep {
 				null,
 				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, "I am still waiting for you to bring me [items]. Do you have any of those with you?"));
 
+		/*
+        // Player asks about required items
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("gland", "venom gland", "glands", "venom glands"),
+				null,
+				ConversationStates.QUESTION_1,
+				"Some #snakes have a gland in which their venom is stored.",
+				null);
+
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("mandragora", "mandragoras", "root of mandragora", "roots of mandragora", "root of mandragoras", "roots of mandragoras"),
+				null,
+				ConversationStates.QUESTION_1,
+				"This is my favorite of all herbs and one of the most rare. Out past Kalavan there is a hidden path in the trees. At the end you will find what you are looking for.",
+				null);
+		*/
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("cake", "fairy cake"),
+				null,
+				ConversationStates.QUESTION_1,
+				"Oh, they are the best treat I have ever tasted. Only the most heavenly creatures could make such angelic food.",
+				null);
+
+		// Player asks about rings
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("ring", "rings"),
+				null,
+				ConversationStates.QUESTION_1,
+				"There are many types of rings.",
+				null);
+
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("medicinal ring", "medicinal rings"),
+				null,
+				ConversationStates.QUESTION_1,
+				"Some poisonous creatures carry them.",
+				null);
+
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("antivenom ring", "antivenom rings"),
+				null,
+				ConversationStates.QUESTION_1,
+				"If you bring me what I need I may be able to strengthen a #medicinal #ring.",
+				null);
+
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("antitoxin ring", "antitoxin rings", "gm antitoxin ring", "gm antitoxin rings"),
+				null,
+				ConversationStates.QUESTION_1,
+				"Heh! This is the ultimate protection against poisoning. Good luck getting one!",
+				null);
+		/*
+		// Player asks about snakes
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("snake", "snakes", "cobra", "cobras"),
+				null,
+				ConversationStates.QUESTION_1,
+				"I've heard rumor newly discovered pit full of snakes somewhere in Ados. But I've never searched for it myself. That kind of work is better left to adventurers.",
+				null);
+
+        // Player asks about required items
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("gland", "venom gland", "glands", "venom glands"),
+				null,
+				ConversationStates.ATTENDING,
+				"Some #snakes have a gland in which their venom is stored.",
+				null);
+
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("mandragora", "mandragoras", "root of mandragora", "roots of mandragora", "root of mandragoras", "roots of mandragoras"),
+				null,
+				ConversationStates.ATTENDING,
+				"This is my favorite of all herbs and one of the most rare. Out past Kalavan there is a hidden path in the trees. At the end you will find what you are looking for.",
+				null);
+		*/
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("cake", "fairy cake"),
+				null,
+				ConversationStates.ATTENDING,
+				"Oh, they are the best treat I have ever tasted. Only the most heavenly creatures could make such angelic food.",
+				null);
+
+		// Player asks about rings
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("ring", "rings"),
+				null,
+				ConversationStates.ATTENDING,
+				"There are many types of rings.",
+				null);
+
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("medicinal ring", "medicinal rings"),
+				null,
+				ConversationStates.ATTENDING,
+				"Some poisonous creatures carry them.",
+				null);
+
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("antivenom ring", "antivenom rings"),
+				null,
+				ConversationStates.ATTENDING,
+				"If you bring me what I need I may be able to strengthen a #medicinal #ring.",
+				null);
+
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("antitoxin ring", "antitoxin rings", "gm antitoxin ring", "gm antitoxin rings"),
+				null,
+				ConversationStates.ATTENDING,
+				"Heh! This is the ultimate protection against poisoning. Good luck getting one!",
+				null);
+		/*
+		// Player asks about snakes
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("snake", "snakes", "cobra", "cobras"),
+				null,
+				ConversationStates.ATTENDING,
+				"I've heard rumor newly discovered pit full of snakes somewhere in Ados. But I've never searched for it myself. That kind of work is better left to adventurers.",
+				null);
+		*/
+	}
+
+
+	/**
+	 * Conversation states for NPC after quest is completed.
+	 *
+	 * @param QUEST_SLOT
+	 */
+	private void addQuestDoneDialogue(final String QUEST_SLOT) {
 		// Quest has previously been completed.
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
@@ -130,124 +278,5 @@ public class RequestAntivenom extends AVRQuestStep {
 				ConversationStates.ATTENDING,
 				"Oh, that's too bad.",
 				null);
-		/*
-        // Player asks about required items
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("gland", "venom gland", "glands", "venom glands"),
-				null,
-				ConversationStates.QUESTION_1,
-				"Some #snakes have a gland in which their venom is stored.",
-				null);
-
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("mandragora", "mandragoras", "root of mandragora", "roots of mandragora", "root of mandragoras", "roots of mandragoras"),
-				null,
-				ConversationStates.QUESTION_1,
-				"This is my favorite of all herbs and one of the most rare. Out past Kalavan there is a hidden path in the trees. At the end you will find what you are looking for.",
-				null);
-		*/
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("cake", "fairy cake"),
-				null,
-				ConversationStates.QUESTION_1,
-				"Oh, they are the best treat I have ever tasted. Only the most heavenly creatures could make such angelic food.",
-				null);
-
-		// Player asks about rings
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("ring", "rings"),
-				null,
-				ConversationStates.QUESTION_1,
-				"There are many types of rings.",
-				null);
-
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("medicinal ring", "medicinal rings"),
-				null,
-				ConversationStates.QUESTION_1,
-				"Some poisonous creatures carry them.",
-				null);
-
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("antivenom ring", "antivenom rings"),
-				null,
-				ConversationStates.QUESTION_1,
-				"If you bring me what I need I may be able to strengthen a #medicinal #ring.",
-				null);
-
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("antitoxin ring", "antitoxin rings", "gm antitoxin ring", "gm antitoxin rings"),
-				null,
-				ConversationStates.QUESTION_1,
-				"Heh! This is the ultimate protection against poisoning. Good luck getting one!",
-				null);
-		/*
-		// Player asks about snakes
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("snake", "snakes", "cobra", "cobras"),
-				null,
-				ConversationStates.QUESTION_1,
-				"I've heard rumor newly discovered pit full of snakes somewhere in Ados. But I've never searched for it myself. That kind of work is better left to adventurers.",
-				null);
-
-        // Player asks about required items
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("gland", "venom gland", "glands", "venom glands"),
-				null,
-				ConversationStates.ATTENDING,
-				"Some #snakes have a gland in which their venom is stored.",
-				null);
-
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("mandragora", "mandragoras", "root of mandragora", "roots of mandragora", "root of mandragoras", "roots of mandragoras"),
-				null,
-				ConversationStates.ATTENDING,
-				"This is my favorite of all herbs and one of the most rare. Out past Kalavan there is a hidden path in the trees. At the end you will find what you are looking for.",
-				null);
-		*/
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("cake", "fairy cake"),
-				null,
-				ConversationStates.ATTENDING,
-				"Oh, they are the best treat I have ever tasted. Only the most heavenly creatures could make such angelic food.",
-				null);
-
-		// Player asks about rings
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("ring", "rings"),
-				null,
-				ConversationStates.ATTENDING,
-				"There are many types of rings.",
-				null);
-
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("medicinal ring", "medicinal rings"),
-				null,
-				ConversationStates.ATTENDING,
-				"Some poisonous creatures carry them.",
-				null);
-
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("antivenom ring", "antivenom rings"),
-				null,
-				ConversationStates.ATTENDING,
-				"If you bring me what I need I may be able to strengthen a #medicinal #ring.",
-				null);
-
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("antitoxin ring", "antitoxin rings", "gm antitoxin ring", "gm antitoxin rings"),
-				null,
-				ConversationStates.ATTENDING,
-				"Heh! This is the ultimate protection against poisoning. Good luck getting one!",
-				null);
-		/*
-		// Player asks about snakes
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("snake", "snakes", "cobra", "cobras"),
-				null,
-				ConversationStates.ATTENDING,
-				"I've heard rumor newly discovered pit full of snakes somewhere in Ados. But I've never searched for it myself. That kind of work is better left to adventurers.",
-				null);
-		*/
 	}
 }
