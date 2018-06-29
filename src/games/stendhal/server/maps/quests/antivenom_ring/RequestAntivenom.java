@@ -34,7 +34,7 @@ import games.stendhal.server.entity.npc.condition.QuestStartedCondition;
 public class RequestAntivenom extends AVRQuestStep {
 
 	public RequestAntivenom(final SpeakerNPC npc, final String questSlot) {
-		super(npc, questSlot, "request_antivenom");
+		super(npc, questSlot, "request");
 	}
 
 	@Override

@@ -42,7 +42,7 @@ import games.stendhal.server.util.ItemCollection;
 public class MixAntivenom extends AVRQuestStep {
 
 	public MixAntivenom(SpeakerNPC npc, String questSlot) {
-		super(npc, questSlot, "mix_antivenom");
+		super(npc, questSlot, "mix");
 	}
 
 	@Override
