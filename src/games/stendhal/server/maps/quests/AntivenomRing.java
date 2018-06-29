@@ -15,12 +15,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import games.stendhal.common.grammar.Grammar;
 import games.stendhal.server.entity.npc.ConversationStates;
 import games.stendhal.server.entity.npc.SpeakerNPC;
 import games.stendhal.server.entity.player.Player;
 import games.stendhal.server.maps.Region;
 import games.stendhal.server.maps.quests.antivenom_ring.MixAntivenom;
 import games.stendhal.server.maps.quests.antivenom_ring.RequestAntivenom;
+import games.stendhal.server.util.ItemCollection;
 
 /**
  * QUEST: Antivenom Ring
@@ -83,7 +85,7 @@ public class AntivenomRing extends AbstractQuest {
 			return res;
 		}
 		res.add("I have found the hermit apothecary's lab in Semos Mountain.");
-		String questState = player.getQuest(QUEST_SLOT, 1);
+		String questState = player.getQuest(QUEST_SLOT);
 		if ("done".equals(questState)) {
 			res.add("I gathered all that Jameson asked for. He applied a special mixture to my ring which made it more resistant to poison. I also got some XP and karma.");
 		}
@@ -92,24 +94,22 @@ public class AntivenomRing extends AbstractQuest {
 		}
 		else {
 			res.add(questState);
-			/*
-			final String[] stateDetails = questState.split(",");
-			if (stateDetails[0].split("=")[0] == "mixing") {
-				res.add(mixer.getName() + " is mixing the antivenom.");
-			} else {
-				final ItemCollection missingMixItems = new ItemCollection();
-				missingMixItems.addFromQuestStateString(stateDetails[0]);
-				res.add("I still need to bring Jameson " + Grammar.enumerateCollection(missingMixItems.toStringList()) + ".");
-			}
+			if (questState.contains(",")) {
+				final String[] states = questState.split(",");
+				if (states.length >= 2) {
+					if (states[1].equals("done")) {
+						res.add(mixer.getName() + " is done mixing.");
+					} else {
+						ItemCollection missingItems = new ItemCollection();
+						missingItems.addFromQuestStateString(states[1]);
+						res.add("I still need to bring " + mixer.getName() + " " + Grammar.enumerateCollection(missingItems.toStringList()) + ".");
+					}
 
-			if (stateDetails[1].split("=")[0] == "extracting") {
-				res.add(extractor.getName() + " is extracting the venom.");
-			}
+					if (states.length >= 4) {
 
-			if (stateDetails[2].split("=")[0] == "fusing") {
-				res.add(fuser.getName() + " is creating my ring.");
+					}
+				}
 			}
-			*/
 		}
 		return res;
 	}
@@ -163,24 +163,6 @@ public class AntivenomRing extends AbstractQuest {
 				ConversationStates.ATTENDING,
 				"He hinted at a secret laboratory that he had built. Something about a hidden doorway.",
 				null);
-	}
-
-	/**
-	 * Quest step 1:
-	 *   NPCs:
-	 *     - Jameson (mixer)
-	 *   Parts:
-	 *     - Player gives message from Klaas to mixer.
-	 */
-	private void requestAntivenom() {
-		new RequestAntivenom(mixer, QUEST_SLOT);
-	}
-
-	/**
-	 * Quest step 2:
-	 */
-	private void mixAntivenom() {
-		new MixAntivenom(mixer, QUEST_SLOT);
 	}
 
 	/**
@@ -268,8 +250,8 @@ public class AntivenomRing extends AbstractQuest {
 				"As a favor to an old friend, Jameson the apothecary will strengthen the medicinal ring.",
 				false);
 		prepareHintNPCs();
-		requestAntivenom();
-		mixAntivenom();
+		new RequestAntivenom(mixer, QUEST_SLOT);
+		new MixAntivenom(mixer, QUEST_SLOT);
 		requestCobraVenom();
 		extractCobraVenom();
 		requestAntivenomRing();
@@ -302,6 +284,6 @@ public class AntivenomRing extends AbstractQuest {
 
 	@Override
 	public String getNPCName() {
-		return "Jameson";
+		return mixer.getName();
 	}
 }

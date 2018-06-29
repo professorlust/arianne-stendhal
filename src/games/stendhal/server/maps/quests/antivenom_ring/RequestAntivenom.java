@@ -88,6 +88,7 @@ public class RequestAntivenom extends AVRQuestStep {
 				null,
 				new MultipleActions(new SetQuestAction(QUEST_SLOT, 0, MIX_ITEMS),
 						new IncreaseKarmaAction(5.0),
+						// FIXME: Note can be dropped before saying "yes" to accept quest.
 						new DropItemAction("note to apothecary"),
 						new SayRequiredItemsFromCollectionAction(QUEST_SLOT, 0, "Klaas has asked me to assist you. I can make a ring that will increase your resistance to poison. I need you to bring me [items].  Do you have any of those with you?")
 				)
