@@ -14,9 +14,18 @@ package games.stendhal.server.maps.ados.animal_sanctuary;
 import java.util.Map;
 
 import games.stendhal.common.Direction;
+import games.stendhal.common.NotificationType;
 import games.stendhal.server.core.config.ZoneConfigurator;
 import games.stendhal.server.core.engine.StendhalRPZone;
+import games.stendhal.server.entity.RPEntity;
+import games.stendhal.server.entity.npc.ConversationPhrases;
+import games.stendhal.server.entity.npc.ConversationStates;
 import games.stendhal.server.entity.npc.SpeakerNPC;
+import games.stendhal.server.entity.npc.action.MultipleActions;
+import games.stendhal.server.entity.npc.action.NPCEmoteAction;
+import games.stendhal.server.entity.npc.action.NPCSetDirection;
+import games.stendhal.server.entity.npc.action.PlaySoundAction;
+import games.stendhal.server.entity.npc.action.SendPrivateMessageAction;
 
 /**
  * NPC used in the Antivenom Ring quest that can extract <code>cobra venom</code>
@@ -35,6 +44,31 @@ public class ZoologistNPC implements ZoneConfigurator {
 		 * Create & configure the NPC instance.
 		 */
 		final SpeakerNPC npc = new SpeakerNPC("Zoey") {
+			/**
+			 * Configure how NPC will converse with player.
+			 */
+			@Override
+			protected void createDialog() {
+				// Too busy to interact.
+				add(ConversationStates.IDLE,
+						ConversationPhrases.GREETING_MESSAGES,
+						null,
+						ConversationStates.IDLE,
+						null,
+						new MultipleActions(
+								new NPCEmoteAction("yawns", false),
+								new PlaySoundAction("yawn-female-1"),
+								new SendPrivateMessageAction(NotificationType.NORMAL, "She is much too busy to be bothered at the moment."),
+								new NPCSetDirection(Direction.UP)));
+			}
+
+			/**
+			 * Force NPC to face north after speaking with players.
+			 */
+			@Override
+			protected void onGoodbye(final RPEntity player) {
+				setDirection(Direction.UP);
+			}
 
 		};
 
