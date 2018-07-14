@@ -93,6 +93,7 @@ class SwingClientGUI implements J2DClientGUI {
 	private final QuitDialog quitDialog;
 	private final UserContext userContext;
 	private final ChatTextController chatText = new ChatTextController();
+	private CharacterMap charMap;
 	private MapPanelController minimap;
 	private JSplitPane verticalSplit;
 	private final JFrame frame;
@@ -465,7 +466,8 @@ class SwingClientGUI implements J2DClientGUI {
 		chatEntryBox.add(chatText.getPlayerChatText(), SLayout.EXPAND_X);
 
 		if (Testing.CHAT) {
-			chatEntryBox.add(new CharacterMap(chatText.getPlayerChatText()));
+			charMap = new CharacterMap(chatText.getPlayerChatText());
+			chatEntryBox.add(charMap);
 		}
 		final JComponent chatBox = new JPanel();
 		chatBox.setBorder(null);
