@@ -30,6 +30,12 @@ import games.stendhal.client.sprite.DataLoader;
  * should call this class.
  */
 class Initializer {
+	/** Nimbus Sans L font family used as the main font for the GUI. */
+	private static final String STANDARD_FONT_REG_NAME = "NimbusSanL-Regu";
+	private static final String STANDARD_FONT_ITAL_NAME = "NimbusSanL-ReguItal";
+	private static final String STANDARD_FONT_BOLD_NAME = "NimbusSanL-Bold";
+	private static final String STANDARD_FONT_BOLD_ITAL_NAME = "NimbusSanL-BoldItal";
+
 	/** Name of the font used for the html areas. Should match the file name without .ttf */
 	private static final String DECORATIVE_FONT_NAME = "BlackChancery";
 	/** Name of the font used for the tally marks. Should match the file name without .ttf */
@@ -38,6 +44,10 @@ class Initializer {
 	private static final Logger logger = Logger.getLogger(Initializer.class);
 
 	static {
+		initFont(STANDARD_FONT_REG_NAME);
+		initFont(STANDARD_FONT_ITAL_NAME);
+		initFont(STANDARD_FONT_BOLD_NAME);
+		initFont(STANDARD_FONT_BOLD_ITAL_NAME);
 		initFont(DECORATIVE_FONT_NAME);
 		initFont(TALLY_FONT_NAME);
 		initApplicationName();
