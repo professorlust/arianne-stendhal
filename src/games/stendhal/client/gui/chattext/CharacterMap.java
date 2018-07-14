@@ -31,6 +31,8 @@ import org.apache.log4j.Logger;
  * use in chat.
  */
 public class CharacterMap extends JButton {
+	private final JPopupMenu menu;
+
 	/**
 	 * Create a new CharacterMap.
 	 *
@@ -41,7 +43,7 @@ public class CharacterMap extends JButton {
 		setFocusable(false);
 		setToolTipText("Insert a special character");
 
-		final JPopupMenu menu = new JPopupMenu();
+		menu = new JPopupMenu();
 
 		addActionListener(new ActionListener() {
 			@Override
