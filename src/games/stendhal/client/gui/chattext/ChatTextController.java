@@ -11,6 +11,7 @@
  ***************************************************************************/
 package games.stendhal.client.gui.chattext;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
@@ -179,5 +180,15 @@ public class ChatTextController {
 		private void fail() {
 			ClientSingletonRepository.getSound().getGroup(SoundLayer.USER_INTERFACE.groupName).play(sound, 0, null, null, false, true);
 		}
+	}
+
+	/**
+	 * Sets font for player chat text input field.
+	 *
+	 * @param font
+	 * 			<code>Font</code> to be used in input field
+	 */
+	public void setFont(Font font) {
+		playerChatText.setFont(font);
 	}
 }
