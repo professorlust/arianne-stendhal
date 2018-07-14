@@ -11,6 +11,7 @@
  ***************************************************************************/
 package games.stendhal.client.gui.chattext;
 
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -21,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.MenuElement;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 
@@ -97,6 +99,22 @@ public class CharacterMap extends JButton {
 				item.setBorder(null);
 				item.setHorizontalTextPosition(CENTER);
 				menu.add(item);
+			}
+		}
+	}
+
+	/**
+	 * Sets font for character map & menu button.
+	 *
+	 * @param font
+	 * 			<code>Font</code> to use for special characters
+	 */
+	public void setMapFont(final Font font) {
+		super.setFont(font);
+
+		for (MenuElement menuItem : menu.getSubElements()) {
+			if (menuItem instanceof JMenuItem) {
+				((JMenuItem)menuItem).setFont(font);
 			}
 		}
 	}
