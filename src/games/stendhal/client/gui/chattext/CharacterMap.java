@@ -109,9 +109,11 @@ public class CharacterMap extends JButton {
 	 * @param font
 	 * 			<code>Font</code> to use for special characters
 	 */
-	public void setMapFont(final Font font) {
+	public void setMapFont(Font font) {
 		super.setFont(font);
 
+		// Emoji map font should always be plain style & larger than chat text input
+		font = new Font(font.getName(), Font.PLAIN, font.getSize() + 6);
 		for (MenuElement menuItem : menu.getSubElements()) {
 			if (menuItem instanceof JMenuItem) {
 				((JMenuItem)menuItem).setFont(font);
