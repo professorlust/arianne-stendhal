@@ -17,6 +17,7 @@ import static games.stendhal.common.constants.Actions.TYPE;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
@@ -748,5 +749,18 @@ class SwingClientGUI implements J2DClientGUI {
 			// Pass on resize event
 			child.setSize(e.getComponent().getSize());
 		}
+	}
+
+	/**
+	 * Sets main font for GUI & sub-elements.
+	 *
+	 * @param font
+	 * 			<code>Font</code> to be used
+	 */
+	public void setFont(final Font font) {
+		// Chat text controller
+		chatText.setFont(font);
+		// Emoji character map
+		charMap.setMapFont(font);
 	}
 }
