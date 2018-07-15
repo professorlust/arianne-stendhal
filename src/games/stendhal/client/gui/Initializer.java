@@ -31,7 +31,7 @@ import games.stendhal.client.sprite.DataLoader;
  */
 class Initializer {
 	/** Nimbus Sans L font family used as the main font for the GUI. */
-	private static final String STANDARD_FONT_REG_NAME = "NimbusSanL-Regu";
+	private static final String STANDARD_FONT_REG_NAME = "NimbusSanL-Custom";
 	private static final String STANDARD_FONT_ITAL_NAME = "NimbusSanL-ReguItal";
 	private static final String STANDARD_FONT_BOLD_NAME = "NimbusSanL-Bold";
 	private static final String STANDARD_FONT_BOLD_ITAL_NAME = "NimbusSanL-BoldItal";
