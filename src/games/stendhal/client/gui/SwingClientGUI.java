@@ -172,6 +172,11 @@ class SwingClientGUI implements J2DClientGUI {
 
 		setupKeyHandling(client);
 
+		// TODO: Remove condition
+		if (Testing.CHAT) {
+			setFont(new Font("NimbusSanL", Font.PLAIN, 12));
+		}
+
 		locationHacksAndBugWorkaround();
 		WindowUtils.restoreSize(frame);
 	}
