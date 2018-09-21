@@ -34,7 +34,7 @@ import marauroa.common.game.RPAction;
 
 
 /**
- * ServerExtension to load Groovy and Java scripts.
+ * ServerExtension to load Groovy, Lua, and Java scripts.
  *
  * @author intensifly
  */
@@ -66,7 +66,7 @@ public class ScriptRunner extends StendhalServerExtension implements
 			final String[] strs = dir.list(new FilenameFilter() {
 				@Override
 				public boolean accept(final File dir, final String name) {
-					return name.endsWith(".groovy");
+					return (name.endsWith(".groovy") || name.endsWith(".lua"));
 				}
 			});
 
@@ -153,6 +153,9 @@ public class ScriptRunner extends StendhalServerExtension implements
 				if (trimmedName.endsWith(".groovy")) {
 					script = new ScriptInGroovy(scriptDir + trimmedName);
 					ignoreExecute = true;
+				} else if (trimmedName.endsWith(".lua")) {
+					script = new ScriptInLua(scriptDir + trimmedName);
+					ignoreExecute = true;
 				} else if (trimmedName.endsWith(".class")) {
 					script = new ScriptInJava(trimmedName);
 				}
@@ -225,6 +228,20 @@ public class ScriptRunner extends StendhalServerExtension implements
 			scriptsGroovy=new LinkedList<String>();
 		}
 
+		// *.lua scripts in data/script/
+		List<String> scriptsLua;
+		final String[] ll = dirGroovy.list(new FilenameFilter() {
+			@Override
+			public boolean accept(final File dir, final String name) {
+				return (name.endsWith(".lua") && (name.indexOf('$') == -1));
+			}
+		});
+		if (ll != null) {
+			scriptsLua = Arrays.asList(ll);
+		} else {
+			scriptsLua = new LinkedList<String>();
+		}
+
 		// *.class scripts could be in data/script/games/stendhal/server/script/
 		final File dirClasses = new File(scriptDir+"games/stendhal/server/script/");
 		List<String> scriptsJava;
@@ -263,6 +280,7 @@ public class ScriptRunner extends StendhalServerExtension implements
 		}
 
 		allScripts.addAll(scriptsGroovy);
+		allScripts.addAll(scriptsLua);
 		allScripts.addAll(scriptsJava);
 
 		stringBuilder.append("results for /script ");
@@ -384,7 +402,7 @@ public class ScriptRunner extends StendhalServerExtension implements
 
 			// execute script
 			script = script.trim();
-			if ("list".equals(mode) || script.endsWith(".groovy") || script.endsWith(".class")) {
+			if ("list".equals(mode) || script.endsWith(".groovy") || script.endsWith(".lua") || script.endsWith(".class")) {
 				boolean res = false;
 				res = perform(script, mode, player, args);
 				if (res) {
@@ -426,7 +444,7 @@ public class ScriptRunner extends StendhalServerExtension implements
 					}
 				}
 			} else {
-				text = "Invalid filename: It should end with .groovy or .class";
+				text = "Invalid filename: It should end with .groovy, .lua, or .class";
 			}
 		}
 
