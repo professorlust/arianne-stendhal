@@ -16,7 +16,7 @@ import java.util.List;
 
 import games.stendhal.server.entity.npc.SpeakerNPC;
 
-public abstract class AVRQuestStep {
+public abstract class AVRQuestStage {
 
 	protected final String QUEST_SLOT;
 
@@ -47,7 +47,7 @@ public abstract class AVRQuestStep {
 
 	protected static final int FUSION_TIME = 30;
 
-	public AVRQuestStep(final SpeakerNPC npc, final String questSlot, final String stageName) {
+	public AVRQuestStage(final SpeakerNPC npc, final String questSlot, final String stageName) {
 		this.npc = npc;
 		this.QUEST_SLOT = questSlot;
 		this.stageName = stageName;

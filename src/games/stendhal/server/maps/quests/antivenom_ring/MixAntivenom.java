@@ -36,7 +36,7 @@ import games.stendhal.server.entity.npc.condition.QuestStateStartsWithCondition;
 import games.stendhal.server.entity.npc.condition.TimePassedCondition;
 import games.stendhal.server.entity.npc.condition.TriggerInListCondition;
 
-public class MixAntivenom extends AVRQuestStep {
+public class MixAntivenom extends AVRQuestStage {
 
 	public MixAntivenom(SpeakerNPC npc, String questSlot) {
 		super(npc, questSlot, "mix");
