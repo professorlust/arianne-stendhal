@@ -31,10 +31,10 @@ import games.stendhal.server.entity.npc.condition.QuestNotCompletedCondition;
 import games.stendhal.server.entity.npc.condition.QuestNotStartedCondition;
 import games.stendhal.server.entity.npc.condition.QuestStartedCondition;
 
-public class RequestAntivenom extends AVRQuestStage {
+public class RequestMix extends AVRQuestStage {
 
-	public RequestAntivenom(final SpeakerNPC npc, final String questSlot) {
-		super(npc, questSlot, "request");
+	public RequestMix(final SpeakerNPC npc, final String questSlot) {
+		super(npc, questSlot, "request_mix");
 	}
 
 	@Override

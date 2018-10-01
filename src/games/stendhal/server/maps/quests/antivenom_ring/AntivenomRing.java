@@ -77,7 +77,7 @@ public class AntivenomRing extends AbstractQuest {
 	private final SpeakerNPC extractor = npcs.get("Zoey");
 	private final SpeakerNPC fuser = npcs.get("Hogart");
 
-	private final String STAGE_REQUEST = "request";
+	private final String STAGE_REQUEST_MIX = "request_mix";
 	private final String STAGE_EXTRACT = "extract";
 	private final String STAGE_MIX = "mix";
 	private final String STAGE_FUSE = "fuse";
@@ -111,7 +111,7 @@ public class AntivenomRing extends AbstractQuest {
 				} else if ("rejected".equals(questStage)) {
 					res.add("Poison is too dangerous. I do not want to get hurt.");
 				} else {
-					if (questStage.equals(STAGE_REQUEST)) {
+					if (questStage.equals(STAGE_REQUEST_MIX)) {
 						res.add(mixerName + " has asked me to gather some items.");
 
 						ItemCollection itemList = new ItemCollection();
@@ -284,7 +284,7 @@ public class AntivenomRing extends AbstractQuest {
 				"As a favor to an old friend, Jameson the apothecary will strengthen the medicinal ring.",
 				false);
 		prepareHintNPCs();
-		new RequestAntivenom(mixer, QUEST_SLOT);
+		new RequestMix(mixer, QUEST_SLOT);
 		new MixAntivenom(mixer, QUEST_SLOT);
 		requestCobraVenom();
 		extractCobraVenom();
