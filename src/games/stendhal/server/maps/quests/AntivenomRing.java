@@ -78,39 +78,74 @@ public class AntivenomRing extends AbstractQuest {
 	private final SpeakerNPC extractor = npcs.get("Zoey");
 	private final SpeakerNPC fuser = npcs.get("Hogart");
 
+	private final String STAGE_REQUEST = "request";
+	private final String STAGE_EXTRACT = "extract";
+	private final String STAGE_MIX = "mix";
+	private final String STAGE_FUSE = "fuse";
+
 	@Override
 	public List<String> getHistory(final Player player) {
 		final List<String> res = new ArrayList<String>();
-		if (!player.hasQuest(QUEST_SLOT)) {
-			return res;
-		}
-		res.add("I have found the hermit apothecary's lab in Semos Mountain.");
-		String questState = player.getQuest(QUEST_SLOT);
-		if ("done".equals(questState)) {
-			res.add("I gathered all that Jameson asked for. He applied a special mixture to my ring which made it more resistant to poison. I also got some XP and karma.");
-		}
-		else if ("rejected".equals(questState)) {
-			res.add("Poison is too dangerous. I do not want to get hurt.");
-		}
-		else {
-			res.add(questState);
-			if (questState.contains(",")) {
-				final String[] states = questState.split(",");
-				if (states.length >= 2) {
-					if (states[1].equals("done")) {
-						res.add(mixer.getName() + " is done mixing.");
-					} else {
-						ItemCollection missingItems = new ItemCollection();
-						missingItems.addFromQuestStateString(states[1]);
-						res.add("I still need to bring " + mixer.getName() + " " + Grammar.enumerateCollection(missingItems.toStringList()) + ".");
-					}
+		if (player.hasQuest(QUEST_SLOT)) {
+			res.add("I have found the hermit apothecary's lab in Semos Mountain.");
 
-					if (states.length >= 4) {
+			final List<String> questInfo = Arrays.asList(player.getQuest(QUEST_SLOT).split(";"));
+			if (!questInfo.isEmpty()) {
+				final String mixerName = mixer.getName();
+				//final String extractorName = extractor.getName();
+				//final String fuserName = fuser.getName();
+
+				final String questStage = questInfo.get(0);
+				//String stageStatus = "";
+				String gatherItems = "";
+
+				if (questInfo.size() > 1) {
+					//stageStatus = questInfo.get(1);
+
+					if (questInfo.size() > 2) {
+						gatherItems = questInfo.get(2);
+					}
+				}
+
+				if ("done".equals(questStage)) {
+					res.add("I gathered all that " + mixerName + " asked for. He applied a special mixture to my ring which made it more resistant to poison. I also got some XP and karma.");
+				} else if ("rejected".equals(questStage)) {
+					res.add("Poison is too dangerous. I do not want to get hurt.");
+				} else {
+					if (questStage.equals(STAGE_REQUEST)) {
+						res.add(mixerName + " has asked me to gather some items.");
+
+						ItemCollection itemList = new ItemCollection();
+						itemList.addFromString(gatherItems);
+						res.add("I still need to bring " + mixerName + " " + Grammar.enumerateCollection(itemList.toStringList()) + ".");
+					} else if (questStage.equals(STAGE_EXTRACT)) {
+
+					} else if (questStage.equals(STAGE_FUSE)) {
 
 					}
+					/*
+					//res.add(questState);
+					if (questStage.contains(",")) {
+						final String[] states = questStage.split(",");
+						if (states.length >= 2) {
+							if (states[1].equals("done")) {
+								res.add(mixer.getName() + " is done mixing.");
+							} else {
+								ItemCollection missingItems = new ItemCollection();
+								missingItems.addFromQuestStateString(states[1]);
+								res.add("I still need to bring " + mixer.getName() + " " + Grammar.enumerateCollection(missingItems.toStringList()) + ".");
+							}
+
+							if (states.length >= 4) {
+
+							}
+						}
+					}
+					*/
 				}
 			}
 		}
+
 		return res;
 	}
 

@@ -38,10 +38,10 @@ public class RequestAntivenom extends AVRQuestStep {
 	}
 
 	@Override
-	protected void addDialogue(final String QUEST_SLOT) {
-		addRequestQuestDialogue(QUEST_SLOT);
-		addQuestActiveDialogue(QUEST_SLOT);
-		addQuestDoneDialogue(QUEST_SLOT);
+	protected void addDialogue() {
+		addRequestQuestDialogue();
+		addQuestActiveDialogue();
+		addQuestDoneDialogue();
 	}
 
 
@@ -50,7 +50,7 @@ public class RequestAntivenom extends AVRQuestStep {
 	 *
 	 * @param QUEST_SLOT
 	 */
-	private void addRequestQuestDialogue(final String QUEST_SLOT) {
+	private void addRequestQuestDialogue() {
 		// Player asks for quest without having Klass's note
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
@@ -86,11 +86,13 @@ public class RequestAntivenom extends AVRQuestStep {
 				null,
 				ConversationStates.ATTENDING,
 				null,
-				new MultipleActions(new SetQuestAction(QUEST_SLOT, 0, MIX_ITEMS),
+				new MultipleActions(new SetQuestAction(QUEST_SLOT, stageName + ";;" + MIX_ITEMS),
 						new IncreaseKarmaAction(5.0),
 						// FIXME: Note can be dropped before saying "yes" to accept quest.
 						new DropItemAction("note to apothecary"),
-						new SayRequiredItemsFromCollectionAction(QUEST_SLOT, 0, "Klaas has asked me to assist you. I can make a ring that will increase your resistance to poison. I need you to bring me [items].  Do you have any of those with you?")
+						new SayRequiredItemsFromCollectionAction(QUEST_SLOT, LIST_SLOT,
+								"Klaas has asked me to assist you. I can make a ring that will increase your resistance to poison. I need you to bring me [items].  Do you have any of those with you?",
+								true)
 				)
 		);
 
@@ -118,7 +120,7 @@ public class RequestAntivenom extends AVRQuestStep {
 	 *
 	 * @param QUEST_SLOT
 	 */
-	private void addQuestActiveDialogue(final String QUEST_SLOT) {
+	private void addQuestActiveDialogue() {
 		// Player asks for quest after it is started
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
@@ -252,10 +254,8 @@ public class RequestAntivenom extends AVRQuestStep {
 
 	/**
 	 * Conversation states for NPC after quest is completed.
-	 *
-	 * @param QUEST_SLOT
 	 */
-	private void addQuestDoneDialogue(final String QUEST_SLOT) {
+	private void addQuestDoneDialogue() {
 		// Quest has previously been completed.
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,

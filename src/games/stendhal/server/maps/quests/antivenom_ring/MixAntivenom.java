@@ -11,11 +11,9 @@
  ***************************************************************************/
 package games.stendhal.server.maps.quests.antivenom_ring;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import games.stendhal.server.entity.npc.ChatAction;
 import games.stendhal.server.entity.npc.ConversationPhrases;
@@ -37,7 +35,6 @@ import games.stendhal.server.entity.npc.condition.QuestInStateCondition;
 import games.stendhal.server.entity.npc.condition.QuestStateStartsWithCondition;
 import games.stendhal.server.entity.npc.condition.TimePassedCondition;
 import games.stendhal.server.entity.npc.condition.TriggerInListCondition;
-import games.stendhal.server.util.ItemCollection;
 
 public class MixAntivenom extends AVRQuestStep {
 
@@ -46,7 +43,7 @@ public class MixAntivenom extends AVRQuestStep {
 	}
 
 	@Override
-	protected void addDialogue(String QUEST_SLOT) {
+	protected void addDialogue() {
 		// FIXME: Condition must apply to "mixing" state and anything afterward
 		npc.add(ConversationStates.IDLE,
 				ConversationPhrases.GREETING_MESSAGES,
@@ -63,7 +60,7 @@ public class MixAntivenom extends AVRQuestStep {
 				new QuestActiveCondition(QUEST_SLOT),
 				ConversationStates.ATTENDING,
 				null,
-				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, "I need [items]. Did you bring something?"));
+				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, 2, "I need [items]. Did you bring something?", true));
 
 		// player says has a required item with him (says "yes")
 		npc.add(ConversationStates.ATTENDING,
@@ -87,7 +84,7 @@ public class MixAntivenom extends AVRQuestStep {
 				new QuestActiveCondition(QUEST_SLOT),
 				ConversationStates.IDLE,
 				null,
-				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, "Okay. I still need [items]"));
+				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, 2, "Okay. I still need [items]", true));
 
 		// Players says does not have required items (alternate conversation state)
 		npc.add(ConversationStates.QUESTION_1,
@@ -97,13 +94,8 @@ public class MixAntivenom extends AVRQuestStep {
 				"Okay. Let me know when you have found something.",
 				null);//new SayRequiredItemsFromCollectionAction(QUEST_SLOT, "Okay. I still need [items]"));
 
-		List<String> GOODBYE_NO_MESSAGES = new ArrayList<String>();
-		for (String message : ConversationPhrases.GOODBYE_MESSAGES) {
-			GOODBYE_NO_MESSAGES.add(message);
-		}
-		for (String message : ConversationPhrases.NO_MESSAGES) {
-			GOODBYE_NO_MESSAGES.add(message);
-		}
+		List<String> GOODBYE_NO_MESSAGES = new LinkedList<>(ConversationPhrases.GOODBYE_MESSAGES);
+		GOODBYE_NO_MESSAGES.addAll(ConversationPhrases.NO_MESSAGES);
 
 		// player says "bye" while listing items
 		npc.add(ConversationStates.QUESTION_2,
@@ -111,7 +103,7 @@ public class MixAntivenom extends AVRQuestStep {
 				new QuestActiveCondition(QUEST_SLOT),
 				ConversationStates.IDLE,
 				null,
-				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, "Okay. I still need [items]"));
+				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, 2, "Okay. I still need [items]", true));
 
 		// Returned too early; still working
 		npc.add(ConversationStates.IDLE,
@@ -142,7 +134,7 @@ public class MixAntivenom extends AVRQuestStep {
 		// player offers item that isn't in the list.
 		npc.add(ConversationStates.QUESTION_2, "",
 			new AndCondition(new QuestActiveCondition(QUEST_SLOT),
-					new NotCondition(new TriggerInListCondition(MIX_ITEMS))),
+					new NotCondition(new TriggerInListCondition(MIX_NAMES))),
 			ConversationStates.QUESTION_2,
 			"I don't believe I asked for that.", null);
 
@@ -153,17 +145,20 @@ public class MixAntivenom extends AVRQuestStep {
 		);
 
 		/* add triggers for the item names */
-		final ItemCollection items = new ItemCollection();
-		items.addFromQuestStateString(MIX_ITEMS);
-		for (final Map.Entry<String, Integer> item : items.entrySet()) {
+		//final ItemCollection items = new ItemCollection();
+		//items.addFromString(MIX_ITEMS);
+		//for (final Map.Entry<String, Integer> item : items.entrySet()) {
+		for (final String iName : MIX_NAMES) {
 			npc.add(ConversationStates.QUESTION_2,
-					item.getKey(),
+					iName,
 					new QuestActiveCondition(QUEST_SLOT),
 					ConversationStates.QUESTION_2,
 					null,
 					new CollectRequestedItemsAction(
-							item.getKey(),
+							iName,
 							QUEST_SLOT,
+							true,
+							2,
 							"Excellent! Do you have anything else with you?",
 							"You brought me that already.",
 							mixAction,
