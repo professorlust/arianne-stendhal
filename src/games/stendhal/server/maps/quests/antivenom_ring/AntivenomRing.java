@@ -9,7 +9,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package games.stendhal.server.maps.quests;
+package games.stendhal.server.maps.quests.antivenom_ring;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,8 +20,7 @@ import games.stendhal.server.entity.npc.ConversationStates;
 import games.stendhal.server.entity.npc.SpeakerNPC;
 import games.stendhal.server.entity.player.Player;
 import games.stendhal.server.maps.Region;
-import games.stendhal.server.maps.quests.antivenom_ring.MixAntivenom;
-import games.stendhal.server.maps.quests.antivenom_ring.RequestAntivenom;
+import games.stendhal.server.maps.quests.AbstractQuest;
 import games.stendhal.server.util.ItemCollection;
 
 /**
