@@ -12,29 +12,42 @@
 package games.stendhal.server.maps.quests.antivenom_ring;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
+import games.stendhal.server.entity.npc.ChatAction;
 import games.stendhal.server.entity.npc.ConversationPhrases;
 import games.stendhal.server.entity.npc.ConversationStates;
 import games.stendhal.server.entity.npc.SpeakerNPC;
+import games.stendhal.server.entity.npc.action.CollectRequestedItemsAction;
 import games.stendhal.server.entity.npc.action.DropItemAction;
 import games.stendhal.server.entity.npc.action.IncreaseKarmaAction;
 import games.stendhal.server.entity.npc.action.MultipleActions;
 import games.stendhal.server.entity.npc.action.SayRequiredItemsFromCollectionAction;
+import games.stendhal.server.entity.npc.action.SayTextAction;
 import games.stendhal.server.entity.npc.action.SetQuestAction;
 import games.stendhal.server.entity.npc.action.SetQuestAndModifyKarmaAction;
+import games.stendhal.server.entity.npc.action.SetQuestToTimeStampAction;
 import games.stendhal.server.entity.npc.condition.AndCondition;
 import games.stendhal.server.entity.npc.condition.GreetingMatchesNameCondition;
 import games.stendhal.server.entity.npc.condition.NotCondition;
 import games.stendhal.server.entity.npc.condition.PlayerHasItemWithHimCondition;
+import games.stendhal.server.entity.npc.condition.QuestActiveCondition;
 import games.stendhal.server.entity.npc.condition.QuestCompletedCondition;
+import games.stendhal.server.entity.npc.condition.QuestInStateCondition;
 import games.stendhal.server.entity.npc.condition.QuestNotCompletedCondition;
 import games.stendhal.server.entity.npc.condition.QuestNotStartedCondition;
 import games.stendhal.server.entity.npc.condition.QuestStartedCondition;
+import games.stendhal.server.entity.npc.condition.TriggerInListCondition;
 
-public class RequestMix extends AVRQuestStage {
+public class RequestMixStage extends AVRQuestStage {
 
-	public RequestMix(final SpeakerNPC npc, final String questSlot) {
-		super(npc, questSlot, "request_mix");
+	/* Items taken to apothecary to create antivenom */
+	protected static final String MIX_ITEMS = "cobra venom=1,mandragora=2,fairy cake=5";
+	protected static final List<String> MIX_NAMES = Arrays.asList("cobra venom", "mandragora", "fairy cake");
+
+	public RequestMixStage(final String npc, final String questSlot, final String stageName, final int stageIndex) {
+		super(npc, questSlot, stageName, stageIndex);
 	}
 
 	@Override
@@ -42,15 +55,16 @@ public class RequestMix extends AVRQuestStage {
 		addRequestQuestDialogue();
 		addQuestActiveDialogue();
 		addQuestDoneDialogue();
+		addGeneralResponsesDialogue();
 	}
 
 
 	/**
 	 * Conversation states for NPC before quest is active.
-	 *
-	 * @param QUEST_SLOT
 	 */
 	private void addRequestQuestDialogue() {
+		final SpeakerNPC npc = npcs.get(npcName);
+
 		// Player asks for quest without having Klass's note
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
@@ -86,11 +100,14 @@ public class RequestMix extends AVRQuestStage {
 				null,
 				ConversationStates.ATTENDING,
 				null,
-				new MultipleActions(new SetQuestAction(QUEST_SLOT, stageName + ";;" + MIX_ITEMS),
+				new MultipleActions(
+						//new SetQuestAction(QUEST_SLOT, STAGE_NAME + ";;" + MIX_ITEMS),
+						new SetQuestAction(QUEST_SLOT, STAGE_IDX, STAGE_NAME),
+						new SetQuestAction(QUEST_SLOT, STATUS_IDX, MIX_ITEMS),
 						new IncreaseKarmaAction(5.0),
 						// FIXME: Note can be dropped before saying "yes" to accept quest.
 						new DropItemAction("note to apothecary"),
-						new SayRequiredItemsFromCollectionAction(QUEST_SLOT, LIST_SLOT,
+						new SayRequiredItemsFromCollectionAction(QUEST_SLOT, STATUS_IDX,
 								"Klaas has asked me to assist you. I can make a ring that will increase your resistance to poison. I need you to bring me [items].  Do you have any of those with you?",
 								true)
 				)
@@ -117,10 +134,10 @@ public class RequestMix extends AVRQuestStage {
 
 	/**
 	 * Conversation states for NPC while quest is active.
-	 *
-	 * @param QUEST_SLOT
 	 */
 	private void addQuestActiveDialogue() {
+		final SpeakerNPC npc = npcs.get(npcName);
+
 		// Player asks for quest after it is started
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
@@ -130,125 +147,116 @@ public class RequestMix extends AVRQuestStage {
 				null,
 				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, "I am still waiting for you to bring me [items]. Do you have any of those with you?"));
 
-		/*
-        // Player asks about required items
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("gland", "venom gland", "glands", "venom glands"),
-				null,
-				ConversationStates.QUESTION_1,
-				"Some #snakes have a gland in which their venom is stored.",
+		// FIXME: Condition must apply to "mixing" state and anything afterward
+		npc.add(ConversationStates.IDLE,
+				ConversationPhrases.GREETING_MESSAGES,
+				new AndCondition(new GreetingMatchesNameCondition(npc.getName()),
+						new QuestActiveCondition(QUEST_SLOT),
+						new NotCondition(new QuestInStateCondition(QUEST_SLOT, STAGE_IDX, "mixing"))),
+				ConversationStates.ATTENDING,
+				"Hello again! Did you bring me the #items I requested?",
 				null);
 
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("mandragora", "mandragoras", "root of mandragora", "roots of mandragora", "root of mandragoras", "roots of mandragoras"),
+		// player asks what is missing (says "items")
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("item", "items", "ingredient", "ingredients"),
+				new QuestActiveCondition(QUEST_SLOT),
+				ConversationStates.ATTENDING,
 				null,
-				ConversationStates.QUESTION_1,
-				"This is my favorite of all herbs and one of the most rare. Out past Kalavan there is a hidden path in the trees. At the end you will find what you are looking for.",
+				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, STATUS_IDX, "I need [items]. Did you bring something?", true));
+
+		// player says has a required item with him (says "yes")
+		npc.add(ConversationStates.ATTENDING,
+				ConversationPhrases.YES_MESSAGES,
+				new QuestActiveCondition(QUEST_SLOT),
+				ConversationStates.QUESTION_2,
+				"What did you bring?",
+				null);
+
+		// Players says has required items (alternate conversation state)
+		npc.add(ConversationStates.QUESTION_1,
+				ConversationPhrases.YES_MESSAGES,
+				new QuestActiveCondition(QUEST_SLOT),
+				ConversationStates.QUESTION_2,
+				"What did you bring?",
+				null);
+
+		// player says does not have a required item with him (says "no")
+		npc.add(ConversationStates.ATTENDING,
+				ConversationPhrases.NO_MESSAGES,
+				new QuestActiveCondition(QUEST_SLOT),
+				ConversationStates.IDLE,
+				null,
+				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, STATUS_IDX, "Okay. I still need [items]", true));
+
+		// Players says does not have required items (alternate conversation state)
+		npc.add(ConversationStates.QUESTION_1,
+				ConversationPhrases.NO_MESSAGES,
+				new QuestActiveCondition(QUEST_SLOT),
+				ConversationStates.IDLE,
+				"Okay. Let me know when you have found something.",
+				null);//new SayRequiredItemsFromCollectionAction(QUEST_SLOT, STATUS_IDX, "Okay. I still need [items]"));
+
+		List<String> GOODBYE_NO_MESSAGES = new LinkedList<>(ConversationPhrases.GOODBYE_MESSAGES);
+		GOODBYE_NO_MESSAGES.addAll(ConversationPhrases.NO_MESSAGES);
+
+		// player says "bye" while listing items
+		npc.add(ConversationStates.QUESTION_2,
+				GOODBYE_NO_MESSAGES,
+				new QuestActiveCondition(QUEST_SLOT),
+				ConversationStates.IDLE,
+				null,
+				new SayRequiredItemsFromCollectionAction(QUEST_SLOT, STATUS_IDX, "Okay. I still need [items]", true));
+
+/*		// player says he didn't bring any items (says no)
+		npc.add(ConversationStates.ATTENDING,
+				ConversationPhrases.NO_MESSAGES,
+				new QuestActiveCondition(QUEST_SLOT),
+				ConversationStates.IDLE,
+				"Ok. Let me know when you have found something.",
+				null);
+
+		// player says he didn't bring any items to different question
+		npc.add(ConversationStates.QUESTION_2,
+				ConversationPhrases.NO_MESSAGES,
+				new QuestActiveCondition(QUEST_SLOT),
+				ConversationStates.IDLE,
+				"Ok. Let me know when you have found something.",
 				null);
 		*/
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("cake", "fairy cake"),
-				null,
-				ConversationStates.QUESTION_1,
-				"Oh, they are the best treat I have ever tasted. Only the most heavenly creatures could make such angelic food.",
-				null);
 
-		// Player asks about rings
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("ring", "rings"),
-				null,
-				ConversationStates.QUESTION_1,
-				"There are many types of rings.",
-				null);
+		// player offers item that isn't in the list.
+		npc.add(ConversationStates.QUESTION_2, "",
+			new AndCondition(new QuestActiveCondition(QUEST_SLOT),
+					new NotCondition(new TriggerInListCondition(MIX_NAMES))),
+			ConversationStates.QUESTION_2,
+			"I don't believe I asked for that.", null);
 
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("medicinal ring", "medicinal rings"),
-				null,
-				ConversationStates.QUESTION_1,
-				"Some poisonous creatures carry them.",
-				null);
+		ChatAction mixAction = new MultipleActions (
+		new SetQuestAction(QUEST_SLOT, STAGE_IDX, "mixing"),
+		new SetQuestToTimeStampAction(QUEST_SLOT, STATUS_IDX),
+		new SayTextAction("Thank you. I'll get to work on mixing the antivenom right after I enjoy a few of these fairy cakes. Please come back in " + MIX_TIME + " minutes.")
+		);
 
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("antivenom ring", "antivenom rings"),
-				null,
-				ConversationStates.QUESTION_1,
-				"If you bring me what I need I may be able to strengthen a #medicinal #ring.",
-				null);
-
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("antitoxin ring", "antitoxin rings", "gm antitoxin ring", "gm antitoxin rings"),
-				null,
-				ConversationStates.QUESTION_1,
-				"Heh! This is the ultimate protection against poisoning. Good luck getting one!",
-				null);
-		/*
-		// Player asks about snakes
-		npc.add(ConversationStates.QUESTION_1,
-				Arrays.asList("snake", "snakes", "cobra", "cobras"),
-				null,
-				ConversationStates.QUESTION_1,
-				"I've heard rumor newly discovered pit full of snakes somewhere in Ados. But I've never searched for it myself. That kind of work is better left to adventurers.",
-				null);
-
-        // Player asks about required items
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("gland", "venom gland", "glands", "venom glands"),
-				null,
-				ConversationStates.ATTENDING,
-				"Some #snakes have a gland in which their venom is stored.",
-				null);
-
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("mandragora", "mandragoras", "root of mandragora", "roots of mandragora", "root of mandragoras", "roots of mandragoras"),
-				null,
-				ConversationStates.ATTENDING,
-				"This is my favorite of all herbs and one of the most rare. Out past Kalavan there is a hidden path in the trees. At the end you will find what you are looking for.",
-				null);
-		*/
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("cake", "fairy cake"),
-				null,
-				ConversationStates.ATTENDING,
-				"Oh, they are the best treat I have ever tasted. Only the most heavenly creatures could make such angelic food.",
-				null);
-
-		// Player asks about rings
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("ring", "rings"),
-				null,
-				ConversationStates.ATTENDING,
-				"There are many types of rings.",
-				null);
-
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("medicinal ring", "medicinal rings"),
-				null,
-				ConversationStates.ATTENDING,
-				"Some poisonous creatures carry them.",
-				null);
-
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("antivenom ring", "antivenom rings"),
-				null,
-				ConversationStates.ATTENDING,
-				"If you bring me what I need I may be able to strengthen a #medicinal #ring.",
-				null);
-
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("antitoxin ring", "antitoxin rings", "gm antitoxin ring", "gm antitoxin rings"),
-				null,
-				ConversationStates.ATTENDING,
-				"Heh! This is the ultimate protection against poisoning. Good luck getting one!",
-				null);
-		/*
-		// Player asks about snakes
-		npc.add(ConversationStates.ATTENDING,
-				Arrays.asList("snake", "snakes", "cobra", "cobras"),
-				null,
-				ConversationStates.ATTENDING,
-				"I've heard rumor newly discovered pit full of snakes somewhere in Ados. But I've never searched for it myself. That kind of work is better left to adventurers.",
-				null);
-		*/
+		/* add triggers for the item names */
+		for (final String iName : MIX_NAMES) {
+			npc.add(ConversationStates.QUESTION_2,
+					iName,
+					new QuestActiveCondition(QUEST_SLOT),
+					ConversationStates.QUESTION_2,
+					null,
+					new CollectRequestedItemsAction(
+							iName,
+							QUEST_SLOT,
+							true,
+							STATUS_IDX,
+							"Excellent! Do you have anything else with you?",
+							"You brought me that already.",
+							mixAction,
+							ConversationStates.IDLE
+							)
+			);
+		}
 	}
 
 
@@ -256,6 +264,8 @@ public class RequestMix extends AVRQuestStage {
 	 * Conversation states for NPC after quest is completed.
 	 */
 	private void addQuestDoneDialogue() {
+		final SpeakerNPC npc = npcs.get(npcName);
+
 		// Quest has previously been completed.
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
@@ -279,5 +289,129 @@ public class RequestMix extends AVRQuestStage {
 				ConversationStates.ATTENDING,
 				"Oh, that's too bad.",
 				null);
+	}
+
+	private void addGeneralResponsesDialogue() {
+		final SpeakerNPC npc = npcs.get(npcName);
+
+		/*
+        // Player asks about required items
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("gland", "venom gland", "glands", "venom glands"),
+				null,
+				ConversationStates.QUESTION_1,
+				"Some #snakes have a gland in which their venom is stored.",
+				null);
+
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("mandragora", "mandragoras", "root of mandragora", "roots of mandragora", "root of mandragoras", "roots of mandragoras"),
+				null,
+				ConversationStates.QUESTION_1,
+				"This is my favorite of all herbs and one of the most rare. Out past Kalavan there is a hidden path in the trees. At the end you will find what you are looking for.",
+				null);
+		*/
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("cake", "fairy cake"),
+				null,
+				ConversationStates.QUESTION_1,
+				"Oh, they are the best treat I have ever tasted. Only the most heavenly creatures could make such angelic food.",
+				null);
+
+		// Player asks about rings
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("ring", "rings"),
+				null,
+				ConversationStates.QUESTION_1,
+				"There are many types of rings.",
+				null);
+
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("medicinal ring", "medicinal rings"),
+				null,
+				ConversationStates.QUESTION_1,
+				"Some poisonous creatures carry them.",
+				null);
+
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("antivenom ring", "antivenom rings"),
+				null,
+				ConversationStates.QUESTION_1,
+				"If you bring me what I need I may be able to strengthen a #medicinal #ring.",
+				null);
+
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("antitoxin ring", "antitoxin rings", "gm antitoxin ring", "gm antitoxin rings"),
+				null,
+				ConversationStates.QUESTION_1,
+				"Heh! This is the ultimate protection against poisoning. Good luck getting one!",
+				null);
+		/*
+		// Player asks about snakes
+		npc.add(ConversationStates.QUESTION_1,
+				Arrays.asList("snake", "snakes", "cobra", "cobras"),
+				null,
+				ConversationStates.QUESTION_1,
+				"I've heard rumor newly discovered pit full of snakes somewhere in Ados. But I've never searched for it myself. That kind of work is better left to adventurers.",
+				null);
+
+        // Player asks about required items
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("gland", "venom gland", "glands", "venom glands"),
+				null,
+				ConversationStates.ATTENDING,
+				"Some #snakes have a gland in which their venom is stored.",
+				null);
+
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("mandragora", "mandragoras", "root of mandragora", "roots of mandragora", "root of mandragoras", "roots of mandragoras"),
+				null,
+				ConversationStates.ATTENDING,
+				"This is my favorite of all herbs and one of the most rare. Out past Kalavan there is a hidden path in the trees. At the end you will find what you are looking for.",
+				null);
+		*/
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("cake", "fairy cake"),
+				null,
+				ConversationStates.ATTENDING,
+				"Oh, they are the best treat I have ever tasted. Only the most heavenly creatures could make such angelic food.",
+				null);
+
+		// Player asks about rings
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("ring", "rings"),
+				null,
+				ConversationStates.ATTENDING,
+				"There are many types of rings.",
+				null);
+
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("medicinal ring", "medicinal rings"),
+				null,
+				ConversationStates.ATTENDING,
+				"Some poisonous creatures carry them.",
+				null);
+
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("antivenom ring", "antivenom rings"),
+				null,
+				ConversationStates.ATTENDING,
+				"If you bring me what I need I may be able to strengthen a #medicinal #ring.",
+				null);
+
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("antitoxin ring", "antitoxin rings", "gm antitoxin ring", "gm antitoxin rings"),
+				null,
+				ConversationStates.ATTENDING,
+				"Heh! This is the ultimate protection against poisoning. Good luck getting one!",
+				null);
+		/*
+		// Player asks about snakes
+		npc.add(ConversationStates.ATTENDING,
+				Arrays.asList("snake", "snakes", "cobra", "cobras"),
+				null,
+				ConversationStates.ATTENDING,
+				"I've heard rumor newly discovered pit full of snakes somewhere in Ados. But I've never searched for it myself. That kind of work is better left to adventurers.",
+				null);
+		*/
 	}
 }
