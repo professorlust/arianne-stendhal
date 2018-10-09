@@ -69,14 +69,12 @@ public class ZoologistNPC implements ZoneConfigurator {
 			protected void onGoodbye(final RPEntity player) {
 				setDirection(Direction.UP);
 			}
-
 		};
 
-		npc.setEntityClass("woman_007_npc"); // TODO: New zoologistnpc sprite.
+		npc.setEntityClass("zoologistnpc");
 		npc.setPosition(27, 3);
 		npc.setDirection(Direction.UP);
 		npc.setDescription("You see " + npc.getName() + ", a dedicated zoologist.");
 		zone.add(npc);
 	}
-
 }

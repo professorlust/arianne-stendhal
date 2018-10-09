@@ -29,8 +29,9 @@ import games.stendhal.server.util.ItemCollection;
  * PARTICIPANTS:
  * <ul>
  * <li>Jameson (the retired apothecary)</li>
- * <li>Other NPCs to give hints at location of apothecary's lab (undecided)</li>
- * <li>Another NPC that fuses the ring (undecided)</li>
+ * <li>Zoey (zoologist at animal sanctuary)</li>
+ * <li>Hogart (fuses ring; no other info yet)</li>
+ * <li>Other NPCs to give hints at location of apothecary's lab: Valo, Haizen, & Ortiv Milquetoast</li>
  * </ul>
  *
  * STEPS:
