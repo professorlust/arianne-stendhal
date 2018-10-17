@@ -63,7 +63,7 @@ public class StendhalNPCDAO {
 	private String getOutfit(SpeakerNPC npc) {
 		String outfit = null;
 		if (npc.getOutfit() != null) {
-			outfit = Integer.toString(npc.getOutfit().getCode());
+			outfit = Long.toString(npc.getOutfit().getCode());
 		}
 		return outfit;
 	}

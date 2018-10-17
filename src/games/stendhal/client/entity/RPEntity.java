@@ -190,7 +190,7 @@ public abstract class RPEntity extends AudibleEntity {
 	/**
 	 * The outfit code.
 	 */
-	private int outfit;
+	private long outfit;
 
 	private int baseHP;
 
@@ -406,7 +406,7 @@ public abstract class RPEntity extends AudibleEntity {
 	 *
 	 * @return The outfit code.
 	 */
-	public int getOutfit() {
+	public long getOutfit() {
 		return outfit;
 	}
 
@@ -1037,7 +1037,7 @@ public abstract class RPEntity extends AudibleEntity {
 		 * Outfit
 		 */
 		if (object.has("outfit")) {
-			outfit = object.getInt("outfit");
+			outfit = object.getLong("outfit");
 		} else {
 			outfit = OUTFIT_UNSET;
 		}
@@ -1186,7 +1186,7 @@ public abstract class RPEntity extends AudibleEntity {
 			 * Outfit
 			 */
 			if (changes.has("outfit")) {
-				outfit = changes.getInt("outfit");
+				outfit = changes.getLong("outfit");
 				fireChange(PROP_OUTFIT);
 			}
 

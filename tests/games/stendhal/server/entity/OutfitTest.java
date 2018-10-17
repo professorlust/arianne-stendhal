@@ -33,7 +33,6 @@ public class OutfitTest {
 		assertEquals(Integer.valueOf(0), ou.getHead());
 		assertEquals(Integer.valueOf(0), ou.getDress());
 		assertEquals(Integer.valueOf(0), ou.getBody());
-
 	}
 
 	/**
@@ -75,13 +74,12 @@ public class OutfitTest {
 		assertEquals(Integer.valueOf(4), ou.getBody());
 
 		final String outfitnumber = "0501020304";
-		ou = new Outfit(Integer.parseInt(outfitnumber));
+		ou = new Outfit(Long.parseLong(outfitnumber));
 		assertEquals(Integer.valueOf(5), ou.getDetail());
 		assertEquals(Integer.valueOf(1), ou.getHair());
 		assertEquals(Integer.valueOf(2), ou.getHead());
 		assertEquals(Integer.valueOf(3), ou.getDress());
 		assertEquals(Integer.valueOf(4), ou.getBody());
-
 	}
 
 	/**
@@ -103,7 +101,6 @@ public class OutfitTest {
 
 		Outfit result = orig.putOver(pullover);
 		assertEquals(12345678, result.getCode());
-
 
 		orig = new Outfit(null, 12, 34, 56, null);
 		result = orig.putOver(pullover);
@@ -129,7 +126,6 @@ public class OutfitTest {
 		assertEquals(Integer.valueOf(0), result.getHead());
 		assertEquals(Integer.valueOf(0), result.getDress());
 		assertEquals(Integer.valueOf(0), result.getBody());
-
 	}
 
 	/**
@@ -155,7 +151,6 @@ public class OutfitTest {
 		assertFalse(part.isPartOf(of));
 		part = new Outfit(null, 1, 5, 5, 0);
 		assertFalse(part.isPartOf(of));
-
 	}
 
 	/**
@@ -176,7 +171,6 @@ public class OutfitTest {
 		of = new Outfit(null, 0, 0, 0, Outfits.BODY_OUTFITS);
 		assertFalse(of.isChoosableByPlayers());
 		// fail("wont work for any part of outfit == null");
-
 	}
 
 	/**

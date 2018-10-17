@@ -87,20 +87,20 @@ public class OutfitStore {
 	 *
 	 * @return A walking state tileset.
 	 */
-	private Sprite buildOutfit(int code, final OutfitColor color) {
-		final int bodycode = (code % 100);
+	private Sprite buildOutfit(long code, final OutfitColor color) {
+		final int bodycode = (int) (code % 100);
 		code /= 100;
 
-		final int dresscode = (code % 100);
+		final int dresscode = (int) (code % 100);
 		code /= 100;
 
-		final int headcode = (code % 100);
+		final int headcode = (int) (code % 100);
 		code /= 100;
 
-		final int haircode = (code % 100);
+		final int haircode = (int) (code % 100);
 		code /= 100;
 
-		final int detailcode = (code % 100);
+		final int detailcode = (int) (code % 100);
 
 		// Body layer
 		Sprite layer = getBodySprite(bodycode, color);
@@ -347,7 +347,7 @@ public class OutfitStore {
 	 *
 	 * @return An walking state tileset.
 	 */
-	private Sprite getOutfit(final int code, final OutfitColor color) {
+	private Sprite getOutfit(final long code, final OutfitColor color) {
 		// Use the normalized string for the reference
 		final String reference = buildReference(code, color.toString());
 		return getOutfit(code, color, reference);
@@ -361,7 +361,7 @@ public class OutfitStore {
 	 * @param reference outfit reference
 	 * @return outfit
 	 */
-	private Sprite getOutfit(final int code, final OutfitColor color,
+	private Sprite getOutfit(final long code, final OutfitColor color,
 			final String reference) {
 		final SpriteCache cache = SpriteCache.get();
 		Sprite sprite = cache.get(reference);
@@ -383,7 +383,7 @@ public class OutfitStore {
 	 * @param blend blend mode for applying the adjustment color
 	 * @return color adjusted outfit
 	 */
-	public Sprite getAdjustedOutfit(final int code, OutfitColor color,
+	public Sprite getAdjustedOutfit(final long code, OutfitColor color,
 			Color adjColor, Composite blend) {
 		if ((adjColor == null) || (blend == null)) {
 			return getOutfit(code, color);
@@ -409,7 +409,7 @@ public class OutfitStore {
 	 * @param colorCode color information for outfit parts
 	 * @return outfit reference
 	 */
-	private String buildReference(final int code, final String colorCode) {
-		return "OUTFIT:" + code + "@" + colorCode;
+	private String buildReference(final long code, final String colorCode) {
+		return "OUTFIT:" + Long.toString(code) + "@" + colorCode;
 	}
 }

@@ -104,7 +104,7 @@ class OutfitDialog extends JDialog {
 	 * @param outfitColor coloring information. <b>Note that outfitColor
 	 *	can be modified by the dialog.</b>
 	 */
-	OutfitDialog(final Frame parent, final String title, int outfit,
+	OutfitDialog(final Frame parent, final String title, long outfit,
 			final OutfitColor outfitColor) {
 		super(parent, false);
 
@@ -126,13 +126,13 @@ class OutfitDialog extends JDialog {
 		dress.addListener(outfitLabel);
 
 		// analyse current outfit
-		int bodiesIndex = outfit % 100;
+		int bodiesIndex = (int) (outfit % 100);
 		outfit = outfit / 100;
-		int clothesIndex = outfit % 100;
+		int clothesIndex = (int) (outfit % 100);
 		outfit = outfit / 100;
-		int headsIndex = outfit % 100;
+		int headsIndex = (int) (outfit % 100);
 		outfit = outfit / 100;
-		int hairsIndex = outfit % 100;
+		int hairsIndex = (int) (outfit % 100);
 
 		// reset special outfits
 		hairsIndex = checkIndex(hairsIndex, hair);
@@ -552,20 +552,20 @@ class OutfitDialog extends JDialog {
 	 * @param colors color state. Unlike the one passed to the constructor, this
 	 * 	will not be modified
 	 */
-	void setState(int outfit, OutfitColor colors) {
+	void setState(long outfit, OutfitColor colors) {
 		// Copy the original colors
 		outfitColor.setColor(OutfitColor.SKIN, colors.getColor(OutfitColor.SKIN));
 		outfitColor.setColor(OutfitColor.DRESS, colors.getColor(OutfitColor.DRESS));
 		outfitColor.setColor(OutfitColor.HAIR, colors.getColor(OutfitColor.HAIR));
 
 		// analyze the outfit code
-		int bodiesIndex = outfit % 100;
+		int bodiesIndex = (int) (outfit % 100);
 		outfit = outfit / 100;
-		int clothesIndex = outfit % 100;
+		int clothesIndex = (int) (outfit % 100);
 		outfit = outfit / 100;
-		int headsIndex = outfit % 100;
+		int headsIndex = (int) (outfit % 100);
 		outfit = outfit / 100;
-		int hairsIndex = outfit % 100;
+		int hairsIndex = (int) (outfit % 100);
 
 		body.setIndex(bodiesIndex);
 		dress.setIndex(clothesIndex);

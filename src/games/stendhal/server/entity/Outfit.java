@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
@@ -88,17 +89,17 @@ public class Outfit {
 	 * Creates a new outfit based on a numeric code.
 	 *
 	 * @param code
-	 *            A 10-digit decimal number where the last part (from the right)
+	 *            A 14-digit decimal number where the last part (from the right)
 	 *            stands for body, the next for dress, then head, then hair,
 	 *            then detail.
 	 */
-	public Outfit(final int code) {
+	public Outfit(final long code) {
 		outfitParts = new HashMap<>();
 		outfitParts.put("detail", (int) (code / Math.pow(100, 4) % 100));
 		outfitParts.put("hair", (int) (code / Math.pow(100, 3) % 100));
 		outfitParts.put("head", (int) (code / Math.pow(100, 2) % 100));
-		outfitParts.put("dress", (code / 100 % 100));
-		outfitParts.put("body", (code % 100));
+		outfitParts.put("dress", (int) (code / 100 % 100));
+		outfitParts.put("body", (int) (code % 100));
 	}
 
 	/**
@@ -182,11 +183,11 @@ public class Outfit {
 	/**
 	 * Represents this outfit in a numeric code.
 	 *
-	 * @return A 10-digit decimal number where the first pair of digits stand for
+	 * @return A 14-digit decimal number where the first pair of digits stand for
 	 *         detail, the second pair for hair, the third pair for head, the
 	 *         fourth pair for dress, and the fifth pair for body
 	 */
-	public int getCode() {
+	public long getCode() {
 		final Integer detail = getDetail();
 		final Integer hair = getHair();
 		final Integer head = getHead();
@@ -246,7 +247,7 @@ public class Outfit {
 		int newHead;
 		int newDress;
 		int newBody;
-		// wear the this outfit 'over' the other outfit;
+		// wear this outfit 'over' the other outfit;
 		// use the other outfit for parts that are not defined for this outfit.
 		if (detail == null) {
 			newDetail = other.getDetail();
@@ -449,6 +450,6 @@ public class Outfit {
 
 	@Override
 	public int hashCode() {
-		return this.getCode();
+		return Objects.hash(this.getCode());
 	}
 }

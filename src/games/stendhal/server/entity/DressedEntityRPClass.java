@@ -24,8 +24,8 @@ public class DressedEntityRPClass {
 		final RPClass entity = new RPClass("dressed_entity");
 
 		entity.isA("rpentity");
-		entity.addAttribute("outfit", Type.INT);
-		entity.addAttribute("outfit_org", Type.INT, Definition.PRIVATE);
+		entity.addAttribute("outfit", Type.LONG);
+		entity.addAttribute("outfit_org", Type.LONG, Definition.PRIVATE);
 		entity.addAttribute("outfit_colors", Type.MAP);
 		entity.addAttribute("outfit_expire_age", Type.INT, Definition.HIDDEN);
 	}
