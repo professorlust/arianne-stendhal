@@ -57,14 +57,14 @@ public abstract class DressedEntity extends RPEntity {
 	 */
 	public Outfit getOutfit() {
 		if (has("outfit")) {
-			return new Outfit(getInt("outfit"));
+			return new Outfit(get("outfit"));
 		}
 		return null;
 	}
 
 	public Outfit getOriginalOutfit() {
 		if (has("outfit_org")) {
-			return new Outfit(getInt("outfit_org"));
+			return new Outfit(get("outfit_org"));
 		}
 
 		return null;
@@ -154,17 +154,17 @@ public abstract class DressedEntity extends RPEntity {
 	// Hack to preserve detail layer
 	public void setOutfitWithDetail(final Outfit outfit, final boolean temporary) {
 		// preserve detail layer
-		final int detailCode = getOutfit().getCode() / 100000000;
+		final long detailCode = getOutfit().getCode() / (long) Math.pow(100, 5);
 
 		// set the new outfit
 		setOutfit(outfit, temporary);
 
 		if (detailCode > 0) {
 			// get current outfit code
-			final int outfitCode = outfit.getCode() + (detailCode * 100000000);
+			final long outfitCode = outfit.getCode() + (long) (detailCode * Math.pow(100, 5));
 
 			// re-add detail
-			put("outfit", outfitCode);
+			put("outfit", Long.toString(outfitCode));
 			notifyWorldAboutChanges();
 		}
 	}

@@ -97,6 +97,9 @@ public class OutfitStore {
 		final int headcode = (code % 100);
 		code /= 100;
 
+		final int eyescode = (code % 100);
+		code /= 100;
+
 		final int haircode = (code % 100);
 		code /= 100;
 
@@ -118,6 +121,10 @@ public class OutfitStore {
 
 		// Head layer
 		layer = getHeadSprite(headcode, color);
+		layer.draw(g, 0, 0);
+
+		// Eyes layer
+		layer = getEyesSprite(eyescode, color);
 		layer.draw(g, 0, 0);
 
 		// Hair layer

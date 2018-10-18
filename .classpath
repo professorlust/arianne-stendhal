@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="tests"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/ant.jar"/>
 	<classpathentry kind="lib" path="libs/cglib-nodep-2.2_beta1.jar"/>
 	<classpathentry kind="lib" path="libs/easymock.jar"/>
@@ -38,5 +37,6 @@
 	<classpathentry kind="lib" path="libs/jetty-util-9.2.14.v20151106.jar"/>
 	<classpathentry kind="lib" path="libs/jetty-webapp-9.2.14.v20151106.jar"/>
 	<classpathentry kind="lib" path="libs/jetty-xml-9.2.14.v20151106.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-1.8.0-openjdk"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

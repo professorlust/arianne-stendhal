@@ -83,7 +83,8 @@ public class FoundGirl implements LoadableContent {
 		};
 
 		//	npcs.add(npc);
-		npc.setOutfit(new Outfit(0, 4, 7, 32, 13));
+		// FIXME: May need adjusted after adding new layers
+		npc.setOutfit(new Outfit(0, 4, 0, 7, 32, 13));
 		npc.setPosition(4, 17);
 		npc.setDirection(Direction.DOWN);
 		npc.initHP(100);
