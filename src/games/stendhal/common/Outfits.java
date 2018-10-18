@@ -43,7 +43,7 @@ public class Outfits {
 	public static final int BODY_OUTFITS_TESTING = 4;
 
 	/** number of player selectable eyes */
-	public static final int EYES_OUTFITS = 10;
+	public static final int EYES_OUTFITS = 11;
 
 	/** number of player selectable mouths */
 	public static final int MOUTH_OUTFITS = 4;
