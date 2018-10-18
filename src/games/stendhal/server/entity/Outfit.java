@@ -50,13 +50,13 @@ public class Outfit {
 	private Map<String, Integer> outfitParts;
 
 	/** body parts that count as being active when their index is set to 0 */
-	private static final List<String> zeroIndexParts = Arrays.asList("head", "body");
+	private static final List<String> zeroIndexParts = Arrays.asList("eyes", "head", "body");
 
 	/**
 	 * Creates a new default outfit (naked person).
 	 */
 	public Outfit() {
-		this(0, 0, 0, 0, 0);
+		this(0, 0, 0, 0, 0, 0);
 	}
 
 	/**
@@ -68,6 +68,8 @@ public class Outfit {
 	 *            The index of the detail style, or null
 	 * @param hair
 	 *            The index of the hair style, or null
+	 * @param eyes
+	 *            The index of the eyes style, or null
 	 * @param head
 	 *            The index of the head style, or null
 	 * @param dress
@@ -75,11 +77,12 @@ public class Outfit {
 	 * @param body
 	 *            The index of the body style, or null
 	 */
-	public Outfit(final Integer detail, final Integer hair, final Integer head,
+	public Outfit(final Integer detail, final Integer hair, final Integer eyes, final Integer head,
 			final Integer dress, final Integer body) {
 		outfitParts = new HashMap<>();
 		outfitParts.put("detail", detail);
 		outfitParts.put("hair", hair);
+		outfitParts.put("eyes", eyes);
 		outfitParts.put("head", head);
 		outfitParts.put("dress", dress);
 		outfitParts.put("body", body);
@@ -90,13 +93,14 @@ public class Outfit {
 	 *
 	 * @param code
 	 *            A 14-digit decimal number where the last part (from the right)
-	 *            stands for body, the next for dress, then head, then hair,
-	 *            then detail.
+	 *            stands for body, the next for dress, then head, then eyes,
+	 *            then hair, then detail.
 	 */
 	public Outfit(final long code) {
 		outfitParts = new HashMap<>();
-		outfitParts.put("detail", (int) (code / Math.pow(100, 4) % 100));
-		outfitParts.put("hair", (int) (code / Math.pow(100, 3) % 100));
+		outfitParts.put("detail", (int) (code / Math.pow(100, 5) % 100));
+		outfitParts.put("hair", (int) (code / Math.pow(100, 4) % 100));
+		outfitParts.put("eyes", (int) (code / Math.pow(100, 3) % 100));
 		outfitParts.put("head", (int) (code / Math.pow(100, 2) % 100));
 		outfitParts.put("dress", (int) (code / 100 % 100));
 		outfitParts.put("body", (int) (code % 100));
@@ -172,6 +176,15 @@ public class Outfit {
 	}
 
 	/**
+	 * Gets the index of this outfit's eyes style.
+	 *
+	 * @return The index, or null if this outfit doesn't contain eyes.
+	 */
+	public Integer getEyes() {
+		return outfitParts.get("eyes");
+	}
+
+	/**
 	 * Gets the index of this outfit's detail style.
 	 *
 	 * @return The index, or null if this outfit doesn't contain a detail.
@@ -184,18 +197,21 @@ public class Outfit {
 	 * Represents this outfit in a numeric code.
 	 *
 	 * @return A 14-digit decimal number where the first pair of digits stand for
-	 *         detail, the second pair for hair, the third pair for head, the
-	 *         fourth pair for dress, and the fifth pair for body
+	 *         detail, the second pair for hair, the third pair for eyes, the
+	 *         fourth pair for head, the fifth pair for dress, and the sixth
+	 *         pair for the body.
 	 */
 	public long getCode() {
 		final Integer detail = getDetail();
 		final Integer hair = getHair();
+		final Integer eyes = getEyes();
 		final Integer head = getHead();
 		final Integer dress = getDress();
 		final Integer body = getBody();
 
 		int de = 0;
 		int ha = 0;
+		int ey = 0;
 		int he = 0;
 		int dr = 0;
 		int bo = 0;
@@ -204,6 +220,9 @@ public class Outfit {
 		}
 		if (hair != null) {
 			ha = hair.intValue();
+		}
+		if (eyes != null) {
+			ey = eyes.intValue();
 		}
 		if (head != null) {
 			he = head.intValue();
@@ -215,7 +234,7 @@ public class Outfit {
 			bo = body.intValue();
 		}
 
-		return (de * 100000000) + (ha * 1000000) + (he * 10000) + (dr * 100)
+		return (de * (long) Math.pow(100, 5)) + (ha * 100000000) + (ey * 1000000) + (he * 10000) + (dr * 100)
 				+ bo;
 	}
 
@@ -238,12 +257,14 @@ public class Outfit {
 	public Outfit putOver(final Outfit other) {
 		final Integer detail = getDetail();
 		final Integer hair = getHair();
+		final Integer eyes = getEyes();
 		final Integer head = getHead();
 		final Integer dress = getDress();
 		final Integer body = getBody();
 
 		int newDetail;
 		int newHair;
+		int newEyes;
 		int newHead;
 		int newDress;
 		int newBody;
@@ -258,6 +279,11 @@ public class Outfit {
 			newHair = other.getHair();
 		} else {
 			newHair = hair;
+		}
+		if (eyes == null) {
+			newEyes = other.getEyes();
+		} else {
+			newEyes = eyes;
 		}
 		if (head == null) {
 			newHead = other.getHead();
@@ -275,7 +301,7 @@ public class Outfit {
 			newBody = body;
 		}
 
-		return new Outfit(newDetail, newHair, newHead, newDress, newBody);
+		return new Outfit(newDetail, newHair, newEyes, newHead, newDress, newBody);
 	}
 
 	/**
@@ -290,12 +316,14 @@ public class Outfit {
 	public Outfit removeOutfit(final Outfit other) {
 		final Integer detail = getDetail();
 		final Integer hair = getHair();
+		final Integer eyes = getEyes();
 		final Integer head = getHead();
 		final Integer dress = getDress();
 		final Integer body = getBody();
 
 		int newDetail;
 		int newHair;
+		int newEyes;
 		int newHead;
 		int newDress;
 		int newBody;
@@ -310,6 +338,11 @@ public class Outfit {
 			newHair = 0;
 		} else {
 			newHair = hair;
+		}
+		if ((eyes == null) || eyes.equals(other.getEyes())) {
+			newEyes = 0;
+		} else {
+			newEyes = eyes;
 		}
 		if ((head == null) || head.equals(other.getHead())) {
 			newHead = 0;
@@ -327,7 +360,7 @@ public class Outfit {
 			newBody = body;
 		}
 
-		return new Outfit(newDetail, newHair, newHead, newDress, newBody);
+		return new Outfit(newDetail, newHair, newEyes, newHead, newDress, newBody);
 	}
 
 	/**
@@ -347,6 +380,7 @@ public class Outfit {
 	public boolean isPartOf(final Outfit other) {
 		final Integer detail = getDetail();
 		final Integer hair = getHair();
+		final Integer eyes = getEyes();
 		final Integer head = getHead();
 		final Integer dress = getDress();
 		final Integer body = getBody();
@@ -354,6 +388,7 @@ public class Outfit {
 		boolean partOf;
 		partOf = ((detail == null) || detail.equals(other.getDetail()))
 				&& ((hair == null) || hair.equals(other.getHair()))
+				&& ((eyes == null) || eyes.equals(other.getEyes()))
 				&& ((head == null) || head.equals(other.getHead()))
 				&& ((dress == null) || dress.equals(other.getDress()))
 				&& ((body == null) || body.equals(other.getBody()));
@@ -370,6 +405,7 @@ public class Outfit {
 	public boolean isChoosableByPlayers() {
 		final Integer detail = getDetail();
 		final Integer hair = getHair();
+		final Integer eyes = getEyes();
 		final Integer head = getHead();
 		final Integer dress = getDress();
 		final Integer body = getBody();
@@ -377,6 +413,7 @@ public class Outfit {
 		boolean choosable;
 		choosable = (detail == null || detail == 0)
 			&& (hair < Outfits.HAIR_OUTFITS) && (hair >= 0)
+			&& (eyes < Outfits.EYES_OUTFITS) && (eyes >= 0)
 		    && (head < Outfits.HEAD_OUTFITS) && (head >= 0)
 			&& (dress < Outfits.CLOTHES_OUTFITS) && (dress >= 0)
 			&& (body < Outfits.BODY_OUTFITS) && (body >= 0);
@@ -413,15 +450,17 @@ public class Outfit {
 	 */
 	public static Outfit getRandomOutfit() {
 		final int newHair = Rand.randUniform(1, 26);
+		// FIXME: Get random eyes
+		final int newEyes = 0;
 		final int newHead;// = Rand.randUniform(1, 15);
 		final int newDress = Rand.randUniform(1, 16);
 		final int newBody;// = Rand.randUniform(1, 5);
 
 		newHead = Rand.randUniform(1, 15);
 		newBody = Rand.randUniform(1, 5);
-		LOGGER.debug("chose random outfit: "  + newHair + " " + newHead
+		LOGGER.debug("chose random outfit: "  + newHair + " " + newEyes + " " + newHead
 				+ " " + newDress + " " + newBody);
-		return new Outfit(0, newHair, newHead, newDress, newBody);
+		return new Outfit(0, newHair, newEyes, newHead, newDress, newBody);
 	}
 
 	/**

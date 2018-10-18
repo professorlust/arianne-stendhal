@@ -45,7 +45,8 @@ public class DadNPC implements LoadableContent {
 			}
 		};
 
-		npc2.setOutfit(new Outfit(0, 27, 7, 34, 1));
+		// FIXME: May need adjusted after adding new layers
+		npc2.setOutfit(new Outfit(0, 27, 0, 7, 34, 1));
 		npc2.setPosition(21, 10);
 		npc2.setDirection(Direction.LEFT);
 		npc2.initHP(100);

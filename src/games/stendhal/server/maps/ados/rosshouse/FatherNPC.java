@@ -76,7 +76,8 @@ public class FatherNPC implements ZoneConfigurator {
 
 		};
 
-		npc.setOutfit(new Outfit(0, 27, 7, 34, 1));
+		// FIXME: May need adjusted after adding new layers
+		npc.setOutfit(new Outfit(0, 27, 0, 7, 34, 1));
 		npc.setPosition(12, 7);
 		npc.setDirection(Direction.DOWN);
 		npc.initHP(100);
