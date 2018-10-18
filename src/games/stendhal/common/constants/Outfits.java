@@ -10,8 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-package games.stendhal.common;
-
+package games.stendhal.common.constants;
 
 
 /**
