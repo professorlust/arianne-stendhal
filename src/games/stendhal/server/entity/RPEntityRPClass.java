@@ -34,6 +34,8 @@ public class RPEntityRPClass {
         entity.isA("active_entity");
         entity.addAttribute("name", Type.STRING);
         entity.addAttribute(ATTR_TITLE, Type.STRING);
+        entity.addAttribute("gender", Type.STRING,
+        		(byte) (Definition.VOLATILE | Definition.PRIVATE));
         entity.addAttribute("level", Type.SHORT);
         entity.addAttribute("xp", Type.INT);
         entity.addAttribute("mana", Type.INT);
