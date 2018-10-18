@@ -34,11 +34,11 @@ public class OutfitStore {
 	/** outfit directory */
 	private static final String OUTFITS = "data/sprites/outfit";
 	/** body directory */
-	private static final String BODIES = OUTFITS + "/body";
+	private static final String BODIES = OUTFITS + "/body-testing";
 	/** dress directory */
 	private static final String DRESSES = OUTFITS + "/dress";
 	/** head directory */
-	private static final String HEADS = OUTFITS + "/head";
+	private static final String HEADS = OUTFITS + "/head-testing";
 	/** mouth directory */
 	private static final String MOUTHS = OUTFITS + "/mouth";
 	/** eyes directory */
