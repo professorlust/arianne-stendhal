@@ -12,6 +12,11 @@
  ***************************************************************************/
 package games.stendhal.server.entity;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 
 import games.stendhal.common.Outfits;
@@ -40,20 +45,11 @@ public class Outfit {
 	/** the logger instance. */
 	private static final Logger LOGGER = Logger.getLogger(Outfit.class);
 
-	/** The detail index, as a value between 0 and 99, or null. */
-	private Integer detail;
+	/** list of parts used by this outfit */
+	private Map<String, Integer> outfitParts;
 
-	/** The hair index, as a value between 0 and 99, or null. */
-	private final Integer hair;
-
-	/** The head index, as a value between 0 and 99, or null. */
-	private final Integer head;
-
-	/** The dress index, as a value between 0 and 99, or null. */
-	private final Integer dress;
-
-	/** The body index, as a value between 0 and 99, or null. */
-	private final Integer body;
+	/** body parts that count as being active when their index is set to 0 */
+	private static final List<String> zeroIndexParts = Arrays.asList("head", "body");
 
 	/**
 	 * Creates a new default outfit (naked person).
@@ -80,11 +76,12 @@ public class Outfit {
 	 */
 	public Outfit(final Integer detail, final Integer hair, final Integer head,
 			final Integer dress, final Integer body) {
-		this.detail = detail;
-		this.hair = hair;
-		this.head = head;
-		this.dress = dress;
-		this.body = body;
+		outfitParts = new HashMap<>();
+		outfitParts.put("detail", detail);
+		outfitParts.put("hair", hair);
+		outfitParts.put("head", head);
+		outfitParts.put("dress", dress);
+		outfitParts.put("body", body);
 	}
 
 	/**
@@ -96,16 +93,45 @@ public class Outfit {
 	 *            then detail.
 	 */
 	public Outfit(final int code) {
+		outfitParts = new HashMap<>();
+		outfitParts.put("detail", (int) (code / Math.pow(100, 4) % 100));
+		outfitParts.put("hair", (int) (code / Math.pow(100, 3) % 100));
+		outfitParts.put("head", (int) (code / Math.pow(100, 2) % 100));
+		outfitParts.put("dress", (code / 100 % 100));
+		outfitParts.put("body", (code % 100));
+	}
 
-		this.body = (code % 100);
+	/**
+	 * Checks if an outfit part is used.
+	 *
+	 * @param key
+	 * 		Key string to check for.
+	 * @return
+	 * 		<code>true</code> if the part's value is not 0.
+	 */
+	public boolean wears(final String key) {
+		final Integer part = outfitParts.get(key);
 
-		this.dress = (code / 100 % 100);
+		if (part == null) {
+			return false;
+		}
+		if (!zeroIndexParts.contains(key) && part == 0) {
+			return false;
+		}
 
-		this.head = (int) (code / Math.pow(100, 2) % 100);
+		return true;
+	}
 
-		this.hair = (int) (code / Math.pow(100, 3) % 100);
-
-		this.detail = (int) (code / Math.pow(100, 4) % 100);
+	/**
+	 * Gets the value of a specified body part.
+	 *
+	 * @param part
+	 * 		String name of body part to get.
+	 * @return
+	 * 		Integer value of body part or <code>null</code> if not found.
+	 */
+	public Integer get(final String part) {
+		return outfitParts.get(part);
 	}
 
 	/**
@@ -114,7 +140,7 @@ public class Outfit {
 	 * @return The index, or null if this outfit doesn't contain a body.
 	 */
 	public Integer getBody() {
-		return body;
+		return outfitParts.get("body");
 	}
 
 	/**
@@ -123,7 +149,7 @@ public class Outfit {
 	 * @return The index, or null if this outfit doesn't contain a dress.
 	 */
 	public Integer getDress() {
-		return dress;
+		return outfitParts.get("dress");
 	}
 
 	/**
@@ -132,7 +158,7 @@ public class Outfit {
 	 * @return The index, or null if this outfit doesn't contain hair.
 	 */
 	public Integer getHair() {
-		return hair;
+		return outfitParts.get("hair");
 	}
 
 	/**
@@ -141,7 +167,7 @@ public class Outfit {
 	 * @return The index, or null if this outfit doesn't contain a head.
 	 */
 	public Integer getHead() {
-		return head;
+		return outfitParts.get("head");
 	}
 
 	/**
@@ -150,7 +176,7 @@ public class Outfit {
 	 * @return The index, or null if this outfit doesn't contain a detail.
 	 */
 	public Integer getDetail() {
-		return detail;
+		return outfitParts.get("detail");
 	}
 
 	/**
@@ -161,6 +187,12 @@ public class Outfit {
 	 *         fourth pair for dress, and the fifth pair for body
 	 */
 	public int getCode() {
+		final Integer detail = getDetail();
+		final Integer hair = getHair();
+		final Integer head = getHead();
+		final Integer dress = getDress();
+		final Integer body = getBody();
+
 		int de = 0;
 		int ha = 0;
 		int he = 0;
@@ -187,6 +219,13 @@ public class Outfit {
 	}
 
 	/**
+	 * Retrieves Map instance representing outfit parts.
+	 */
+	public Map<String, Integer> getMap() {
+		return outfitParts;
+	}
+
+	/**
 	 * Gets the result that you get when you wear this outfit over another
 	 * outfit. Note that this new outfit can contain parts that are marked as
 	 * NONE; in this case, the parts from the other outfit will be used.
@@ -196,6 +235,12 @@ public class Outfit {
 	 * @return the combined outfit
 	 */
 	public Outfit putOver(final Outfit other) {
+		final Integer detail = getDetail();
+		final Integer hair = getHair();
+		final Integer head = getHead();
+		final Integer dress = getDress();
+		final Integer body = getBody();
+
 		int newDetail;
 		int newHair;
 		int newHead;
@@ -203,30 +248,30 @@ public class Outfit {
 		int newBody;
 		// wear the this outfit 'over' the other outfit;
 		// use the other outfit for parts that are not defined for this outfit.
-		if (this.detail == null) {
-			newDetail = other.detail;
+		if (detail == null) {
+			newDetail = other.getDetail();
 		} else {
-			newDetail = this.detail;
+			newDetail = detail;
 		}
-		if (this.hair == null) {
-			newHair = other.hair;
+		if (hair == null) {
+			newHair = other.getHair();
 		} else {
-			newHair = this.hair;
+			newHair = hair;
 		}
-		if (this.head == null) {
-			newHead = other.head;
+		if (head == null) {
+			newHead = other.getHead();
 		} else {
-			newHead = this.head;
+			newHead = head;
 		}
-		if (this.dress == null) {
-			newDress = other.dress;
+		if (dress == null) {
+			newDress = other.getDress();
 		} else {
-			newDress = this.dress;
+			newDress = dress;
 		}
-		if (this.body == null) {
-			newBody = other.body;
+		if (body == null) {
+			newBody = other.getBody();
 		} else {
-			newBody = this.body;
+			newBody = body;
 		}
 
 		return new Outfit(newDetail, newHair, newHead, newDress, newBody);
@@ -242,6 +287,12 @@ public class Outfit {
 	 * @return the new outfit, with the parameter-outfit removed
 	 */
 	public Outfit removeOutfit(final Outfit other) {
+		final Integer detail = getDetail();
+		final Integer hair = getHair();
+		final Integer head = getHead();
+		final Integer dress = getDress();
+		final Integer body = getBody();
+
 		int newDetail;
 		int newHair;
 		int newHead;
@@ -249,27 +300,27 @@ public class Outfit {
 		int newBody;
 		// wear the this outfit 'over' the other outfit;
 		// use the other outfit for parts that are not defined for this outfit.
-		if ((detail == null) || detail.equals(other.detail)) {
+		if ((detail == null) || detail.equals(other.getDetail())) {
 			newDetail = 0;
 		} else {
 			newDetail = detail;
 		}
-		if ((hair == null) || hair.equals(other.hair)) {
+		if ((hair == null) || hair.equals(other.getHair())) {
 			newHair = 0;
 		} else {
 			newHair = hair;
 		}
-		if ((head == null) || head.equals(other.head)) {
+		if ((head == null) || head.equals(other.getHead())) {
 			newHead = 0;
 		} else {
 			newHead = head;
 		}
-		if ((dress == null) || dress.equals(other.dress)) {
+		if ((dress == null) || dress.equals(other.getDress())) {
 			newDress = 0;
 		} else {
 			newDress = dress;
 		}
-		if ((body == null) || body.equals(other.body)) {
+		if ((body == null) || body.equals(other.getBody())) {
 			newBody = 0;
 		} else {
 			newBody = body;
@@ -282,7 +333,7 @@ public class Outfit {
 	 * removes the details
 	 */
 	public void removeDetail() {
-		detail = 0;
+		outfitParts.replace("detail", 0);
 	}
 
 	/**
@@ -293,12 +344,18 @@ public class Outfit {
 	 * @return true iff this outfit is part of the given outfit.
 	 */
 	public boolean isPartOf(final Outfit other) {
+		final Integer detail = getDetail();
+		final Integer hair = getHair();
+		final Integer head = getHead();
+		final Integer dress = getDress();
+		final Integer body = getBody();
+
 		boolean partOf;
-		partOf = ((detail == null) || detail.equals(other.detail))
-				&& ((hair == null) || hair.equals(other.hair))
-				&& ((head == null) || head.equals(other.head))
-				&& ((dress == null) || dress.equals(other.dress))
-				&& ((body == null) || body.equals(other.body));
+		partOf = ((detail == null) || detail.equals(other.getDetail()))
+				&& ((hair == null) || hair.equals(other.getHair()))
+				&& ((head == null) || head.equals(other.getHead()))
+				&& ((dress == null) || dress.equals(other.getDress()))
+				&& ((body == null) || body.equals(other.getBody()));
 
 		return partOf;
 	}
@@ -310,6 +367,12 @@ public class Outfit {
 	 * @return true if it is a normal outfit
 	 */
 	public boolean isChoosableByPlayers() {
+		final Integer detail = getDetail();
+		final Integer hair = getHair();
+		final Integer head = getHead();
+		final Integer dress = getDress();
+		final Integer body = getBody();
+
 		boolean choosable;
 		choosable = (detail == null || detail == 0)
 			&& (hair < Outfits.HAIR_OUTFITS) && (hair >= 0)
@@ -326,6 +389,8 @@ public class Outfit {
 	 * @return true if naked, false if dressed
 	 */
 	public boolean isNaked() {
+		final Integer dress = getDress();
+
 		if (isCompatibleWithClothes()) {
 			return (dress == null) || dress.equals(0);
 		} else {
@@ -364,6 +429,8 @@ public class Outfit {
 	 * @return true if the outfit is compatible with clothes, false otherwise
 	 */
 	public boolean isCompatibleWithClothes() {
+		final Integer body = getBody();
+
 		return !(body > 80 && body < 99);
 	}
 
