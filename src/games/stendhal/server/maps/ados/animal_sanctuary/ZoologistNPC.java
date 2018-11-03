@@ -51,15 +51,17 @@ public class ZoologistNPC implements ZoneConfigurator {
 			protected void createDialog() {
 				// Too busy to interact.
 				add(ConversationStates.IDLE,
-						ConversationPhrases.GREETING_MESSAGES,
-						null,
-						ConversationStates.IDLE,
-						null,
-						new MultipleActions(
-								new NPCEmoteAction("yawns", false),
-								new PlaySoundAction("yawn-female-1"),
-								new SendPrivateMessageAction(NotificationType.NORMAL, "She is much too busy to be bothered at the moment."),
-								new NPCSetDirection(Direction.UP)));
+					ConversationPhrases.GREETING_MESSAGES,
+					null,
+					ConversationStates.IDLE,
+					null,
+					new MultipleActions(
+						new NPCEmoteAction("yawns", false),
+						new PlaySoundAction("yawn-female-1"),
+						new SendPrivateMessageAction(NotificationType.NORMAL, "She is much too busy to be bothered at the moment."),
+						new NPCSetDirection(Direction.UP)));
+
+				addGoodbye();
 			}
 
 			/**
