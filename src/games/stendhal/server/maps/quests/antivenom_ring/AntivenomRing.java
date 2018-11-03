@@ -114,8 +114,8 @@ public class AntivenomRing extends AbstractQuest {
 				}
 
 				if (questInfo.size() >= STAGE_EXTRACT_SLOT + 2) {
-					final String extractState = questInfo.get(STAGE_MIX_SLOT);
-					final String gatherExtractItems = questInfo.get(STAGE_MIX_SLOT + 1);
+					final String extractState = questInfo.get(STAGE_EXTRACT_SLOT);
+					final String gatherExtractItems = questInfo.get(STAGE_EXTRACT_SLOT + 1);
 
 					if (extractState.equals("done")) {
 						res.add("I gathered all that " + extractor + " asked for.");
