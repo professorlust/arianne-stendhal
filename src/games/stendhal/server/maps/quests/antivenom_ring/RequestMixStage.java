@@ -20,7 +20,7 @@ import games.stendhal.server.entity.npc.ConversationPhrases;
 import games.stendhal.server.entity.npc.ConversationStates;
 import games.stendhal.server.entity.npc.SpeakerNPC;
 import games.stendhal.server.entity.npc.action.CollectRequestedItemsAction;
-import games.stendhal.server.entity.npc.action.DropItemAction;
+import games.stendhal.server.entity.npc.action.DropInfostringItemAction;
 import games.stendhal.server.entity.npc.action.IncreaseKarmaAction;
 import games.stendhal.server.entity.npc.action.MultipleActions;
 import games.stendhal.server.entity.npc.action.SayRequiredItemsFromCollectionAction;
@@ -31,7 +31,7 @@ import games.stendhal.server.entity.npc.action.SetQuestToTimeStampAction;
 import games.stendhal.server.entity.npc.condition.AndCondition;
 import games.stendhal.server.entity.npc.condition.GreetingMatchesNameCondition;
 import games.stendhal.server.entity.npc.condition.NotCondition;
-import games.stendhal.server.entity.npc.condition.PlayerHasItemWithHimCondition;
+import games.stendhal.server.entity.npc.condition.PlayerHasInfostringItemWithHimCondition;
 import games.stendhal.server.entity.npc.condition.QuestActiveCondition;
 import games.stendhal.server.entity.npc.condition.QuestCompletedCondition;
 import games.stendhal.server.entity.npc.condition.QuestInStateCondition;
@@ -41,6 +41,9 @@ import games.stendhal.server.entity.npc.condition.QuestStartedCondition;
 import games.stendhal.server.entity.npc.condition.TriggerInListCondition;
 
 public class RequestMixStage extends AVRQuestStage {
+
+	/* infostring that identifies note item */
+	private static final String NOTE_INFOSTRING = "note to apothecary";
 
 	/* Items taken to apothecary to create antivenom */
 	protected static final String MIX_ITEMS = "cobra venom=1,mandragora=2,fairy cake=5";
@@ -68,7 +71,8 @@ public class RequestMixStage extends AVRQuestStage {
 		// Player asks for quest without having Klass's note
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
-				new AndCondition(new NotCondition(new PlayerHasItemWithHimCondition("note to apothecary")),
+				new AndCondition(
+						new NotCondition(new PlayerHasInfostringItemWithHimCondition("note", NOTE_INFOSTRING)),
 						new QuestNotStartedCondition(QUEST_SLOT)),
 				ConversationStates.ATTENDING,
 				"I'm sorry, but I'm much too busy right now. Perhaps you could talk to #Klaas.",
@@ -77,8 +81,9 @@ public class RequestMixStage extends AVRQuestStage {
 		// Player speaks to apothecary while carrying note.
 		npc.add(ConversationStates.IDLE,
 				ConversationPhrases.GREETING_MESSAGES,
-				new AndCondition(new GreetingMatchesNameCondition(npc.getName()),
-						new PlayerHasItemWithHimCondition("note to apothecary"),
+				new AndCondition(
+						new GreetingMatchesNameCondition(npc.getName()),
+						new PlayerHasInfostringItemWithHimCondition("note", NOTE_INFOSTRING),
 						new QuestNotStartedCondition(QUEST_SLOT)),
 				ConversationStates.QUEST_OFFERED,
 				"Oh, a message from Klaas. Is that for me?",
@@ -87,8 +92,9 @@ public class RequestMixStage extends AVRQuestStage {
 		// Player explicitly requests "quest" while carrying note (in case note is dropped before speaking to apothecary).
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
-				new AndCondition(new GreetingMatchesNameCondition(npc.getName()),
-						new PlayerHasItemWithHimCondition("note to apothecary"),
+				new AndCondition(
+						new GreetingMatchesNameCondition(npc.getName()),
+						new PlayerHasInfostringItemWithHimCondition("note", NOTE_INFOSTRING),
 						new QuestNotStartedCondition(QUEST_SLOT)),
 				ConversationStates.QUEST_OFFERED,
 				"Oh, a message from Klaas. Is that for me?",
@@ -106,7 +112,7 @@ public class RequestMixStage extends AVRQuestStage {
 						new SetQuestAction(QUEST_SLOT, STATUS_IDX, MIX_ITEMS),
 						new IncreaseKarmaAction(5.0),
 						// FIXME: Note can be dropped before saying "yes" to accept quest.
-						new DropItemAction("note to apothecary"),
+						new DropInfostringItemAction("note", NOTE_INFOSTRING),
 						new SayRequiredItemsFromCollectionAction(QUEST_SLOT, STATUS_IDX,
 								"Klaas has asked me to assist you. I can make a ring that will increase your resistance to poison. I need you to bring me [items].  Do you have any of those with you?",
 								true)
@@ -141,7 +147,8 @@ public class RequestMixStage extends AVRQuestStage {
 		// Player asks for quest after it is started
 		npc.add(ConversationStates.ATTENDING,
 				ConversationPhrases.QUEST_MESSAGES,
-				new AndCondition(new QuestStartedCondition(QUEST_SLOT),
+				new AndCondition(
+						new QuestStartedCondition(QUEST_SLOT),
 						new QuestNotCompletedCondition(QUEST_SLOT)),
 				ConversationStates.ATTENDING,
 				null,
@@ -150,7 +157,8 @@ public class RequestMixStage extends AVRQuestStage {
 		// FIXME: Condition must apply to "mixing" state and anything afterward
 		npc.add(ConversationStates.IDLE,
 				ConversationPhrases.GREETING_MESSAGES,
-				new AndCondition(new GreetingMatchesNameCondition(npc.getName()),
+				new AndCondition(
+						new GreetingMatchesNameCondition(npc.getName()),
 						new QuestActiveCondition(QUEST_SLOT),
 						new NotCondition(new QuestInStateCondition(QUEST_SLOT, STAGE_IDX, "mixing"))),
 				ConversationStates.ATTENDING,
@@ -227,7 +235,8 @@ public class RequestMixStage extends AVRQuestStage {
 
 		// player offers item that isn't in the list.
 		npc.add(ConversationStates.QUESTION_2, "",
-			new AndCondition(new QuestActiveCondition(QUEST_SLOT),
+			new AndCondition(
+					new QuestActiveCondition(QUEST_SLOT),
 					new NotCondition(new TriggerInListCondition(MIX_NAMES))),
 			ConversationStates.QUESTION_2,
 			"I don't believe I asked for that.", null);
