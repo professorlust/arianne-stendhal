@@ -45,9 +45,9 @@ public class RequestMixStage extends AVRQuestStage {
 	/* infostring that identifies note item */
 	private static final String NOTE_INFOSTRING = "note to apothecary";
 
-	/* Items taken to apothecary to create antivenom */
-	protected static final String MIX_ITEMS = "cobra venom=1,mandragora=2,fairy cake=5";
-	protected static final List<String> MIX_NAMES = Arrays.asList("cobra venom", "mandragora", "fairy cake");
+	/* items taken to apothecary to create antivenom */
+	private static final String MIX_ITEMS = "cobra venom=1,mandragora=2,fairy cake=5";
+	private static final List<String> MIX_NAMES = Arrays.asList("cobra venom", "mandragora", "fairy cake");
 
 	public RequestMixStage(final String npc, final String questSlot, final String stageName, final int stageIndex) {
 		super(npc, questSlot, stageName, stageIndex);
@@ -262,9 +262,7 @@ public class RequestMixStage extends AVRQuestStage {
 							"Excellent! Do you have anything else with you?",
 							"You brought me that already.",
 							mixAction,
-							ConversationStates.IDLE
-							)
-			);
+							ConversationStates.IDLE));
 		}
 	}
 
